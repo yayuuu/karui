@@ -14,7 +14,7 @@ test('SSR, fragment navigation, menu hierarchy, redirects and safe error pages u
   await writeFile(join(content, 'site.yml'), 'title: Test\nlanguage: en\nlanguages: [en, pl, fr]\nmenu:\n  - title: Section\n    href: /section\n    children:\n      - title: Article\n        href: /section/article\nredirects:\n  /old/: /section/\n');
   await writeFile(join(content, 'site.pl.yml'), 'title: Polska witryna\ndescription: Polski opis witryny\nfooter: Polska stopka\n');
   await writeFile(join(content, 'pages/section/index.md'), '---\ntitle: Section\n---\nSection text');
-  await writeFile(join(content, 'pages/section/article.md'), '---\ntitle: Article\nformat: markdown\n---\n**Hello**');
+  await writeFile(join(content, 'pages/section/article.md'), '---\ntitle: Article\nformat: markdown\ngalleryVisibility: hidden\ngallery:\n  - src: /media/photo.large.png\n    thumbnail: /media/photo.small.webp\n    alt: Preview\n---\n**Hello**\n\n[![Preview](/media/photo.small.webp)](/media/photo.large.png)');
   await writeFile(join(content, 'pages/section/article.pl.md'), '---\ntitle: Artykuł\nformat: markdown\n---\n**Witaj**');
   const app = await buildApp({ ...configFromEnv(), contentDir: content, contentCacheDir: join(root, 'cache'), contentRefreshMs: 50 });
   t.after(async () => { await app.close(); await rm(root, { recursive: true, force: true }); });
@@ -32,6 +32,9 @@ test('SSR, fragment navigation, menu hierarchy, redirects and safe error pages u
     assert.equal(typeof data.menu, 'string');
     if (url === '/section/article') {
       assert.match(data.content, /<strong>Hello<\/strong>/);
+      assert.match(full.body, /<link rel="stylesheet" data-page-style href="[^"]*gallery\.css">/);
+      assert.match(full.body, /class="inline-gallery-photo"/);
+      assert.equal(data.styles.some((style: string) => style.endsWith('/gallery.css')), true);
       assert.equal(data.back, '/section'); assert.match(data.submenu, /Article/);
       assert.match(data.menu, /data-active="ancestor"/);
     }

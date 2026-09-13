@@ -4,7 +4,26 @@ test('lightbox dismisses on backdrop clicks, not on controls, borders or drags f
   await page.goto('/appearance-preview');
   const tile = page.locator('.imgframe').first(), dialog = page.locator('dialog.lightbox');
   await tile.click(); await expect(dialog).toBeVisible();
-  await page.locator('[data-action=next]').click();
+  const transition = await page.locator('[data-action=next]').evaluate(async button => {
+    const root = button.closest('[data-gallery]')!;
+    const image = root.querySelector<HTMLImageElement>('[data-gallery-image]')!;
+    const initialSource = image.src;
+    const started = performance.now();
+    const swapped = new Promise<number>(resolve => {
+      const observer = new MutationObserver(() => {
+        if (image.src === initialSource) return;
+        observer.disconnect(); resolve(performance.now());
+      });
+      observer.observe(image, { attributes: true, attributeFilter: ['src'] });
+    });
+    (button as HTMLButtonElement).click();
+    const changed = await swapped;
+    const fadeIn = image.getAnimations().at(-1);
+    await fadeIn?.finished.catch(() => undefined);
+    return { fadeOut: changed - started, fadeIn: performance.now() - changed };
+  });
+  expect(transition.fadeOut).toBeGreaterThanOrEqual(120);
+  expect(transition.fadeIn).toBeGreaterThanOrEqual(120);
   await expect(page.locator('[data-gallery-counter]')).toHaveText('Zdjęcie 2 z 8');
   const title = dialog.locator('.lightbox-title');
   const download = title.getByRole('link', { name: 'Pobierz', exact: true });

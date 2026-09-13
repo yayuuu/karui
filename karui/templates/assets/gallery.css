@@ -21,5 +21,6 @@
 [data-gallery] .photo-navigation span { display: inline-block; padding: 10px; font-weight: bold; background: rgba(0,0,0,.5); opacity: 0; }
 [data-gallery] .photo-navigation:hover span, [data-gallery] .photo-navigation:focus-visible span { opacity: 1; }
 @media (hover: none) { [data-gallery] .photo-navigation span { opacity: 1; } }
-[data-gallery] .lightbox-title { background: var(--page-row); border: 0; font-size: .875rem; display: flex; justify-content: space-between; }
+[data-gallery] .lightbox-title { border: 0; padding: 0 0 8px; font-size: .875rem; display: flex; align-items: center; justify-content: space-between; }
+[data-gallery] .lightbox-title > button { box-sizing: border-box; display: inline-grid; place-items: center; flex: 0 0 28px; width: 28px; height: 28px; min-width: 28px; margin: 0; padding: 0; line-height: 1; }
 [data-gallery] .lightbox-download { font-size: .85em; white-space: nowrap; }

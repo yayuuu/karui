@@ -90,6 +90,8 @@ export function initGalleries() {
     const image = root.querySelector<HTMLImageElement>('[data-gallery-image]')!;
     const download = root.querySelector<HTMLAnchorElement>('[data-gallery-download]')!;
     const counter = root.querySelector<HTMLElement>('[data-gallery-counter]')!;
+    const transitionDuration = 125;
+    let transition = 0;
     let pointerStartedOutside = false;
     const outsideDialog = (event: MouseEvent) => {
       const box = dialog.getBoundingClientRect();
@@ -107,7 +109,7 @@ export function initGalleries() {
       pointerStartedOutside = false;
       if (dismiss) dialog.close();
     }, options);
-    let activePhotos = photos, index = 0;
+    let activePhotos = photos, index = 0, requestedIndex = 0;
     const render = () => {
       const photo = activePhotos[index];
       if (!photo) return;
@@ -115,6 +117,41 @@ export function initGalleries() {
       download.href = photo.download ?? photo.src;
       counter.textContent = t('Photo {current} of {total}', { current: index + 1, total: activePhotos.length });
       for (const button of root.querySelectorAll<HTMLButtonElement>('.photo-navigation')) button.hidden = activePhotos.length < 2;
+    };
+    const stopImageAnimations = () => image.getAnimations().forEach(animation => animation.cancel());
+    const photoReady = (photo: Photo) => new Promise<boolean>(resolve => {
+      const preload = new Image();
+      let settled = false;
+      const finish = (loaded: boolean) => {
+        if (settled) return;
+        settled = true;
+        if (!loaded) return resolve(false);
+        preload.decode().catch(() => undefined).finally(() => resolve(true));
+      };
+      preload.addEventListener('load', () => finish(true), { once: true });
+      preload.addEventListener('error', () => finish(false), { once: true });
+      preload.decoding = 'async';
+      preload.src = photo.src;
+      if (preload.complete) finish(preload.naturalWidth > 0);
+    });
+    const navigate = async (step: number) => {
+      if (activePhotos.length < 2) return;
+      requestedIndex = (requestedIndex + activePhotos.length + step) % activePhotos.length;
+      const target = requestedIndex, token = ++transition;
+      const opacity = Number.parseFloat(getComputedStyle(image).opacity);
+      stopImageAnimations();
+      const fadeOut = image.animate(
+        [{ opacity: Number.isFinite(opacity) ? opacity : 1 }, { opacity: 0 }],
+        { duration: transitionDuration, easing: 'ease-out', fill: 'forwards' },
+      );
+      const [, loaded] = await Promise.all([fadeOut.finished.catch(() => undefined), photoReady(activePhotos[target]!)]);
+      if (token !== transition) return;
+      if (!loaded) requestedIndex = index;
+      else { index = target; render(); }
+      fadeOut.cancel();
+      const fadeIn = image.animate([{ opacity: 0 }, { opacity: 1 }], { duration: transitionDuration, easing: 'ease-in', fill: 'both' });
+      await fadeIn.finished.catch(() => undefined);
+      if (token === transition) fadeIn.cancel();
     };
     const selectedIndex = (items: Photo[], button: HTMLElement) => items.findIndex(photo => photo.src === button.dataset.gallerySrc);
     scope.addEventListener('click', event => {
@@ -124,15 +161,15 @@ export function initGalleries() {
       if (button.dataset.action === 'open') {
         const selected = selectedIndex(photos, button);
         if (selected < 0) return;
-        activePhotos = photos; index = selected; render(); dialog.showModal();
+        transition++; stopImageAnimations(); activePhotos = photos; index = selected; requestedIndex = index; render(); dialog.showModal();
       } else if (button.dataset.gallerySrc) {
         const selected = selectedIndex(galleryItems, button);
         if (selected < 0) return;
-        activePhotos = [galleryItems[selected]!]; index = 0; render(); dialog.showModal();
+        transition++; stopImageAnimations(); activePhotos = [galleryItems[selected]!]; index = 0; requestedIndex = index; render(); dialog.showModal();
       }
       if (button.dataset.action === 'close') dialog.close();
-      if (button.dataset.action === 'next' && activePhotos.length) { index = (index + 1) % activePhotos.length; render(); }
-      if (button.dataset.action === 'previous' && activePhotos.length) { index = (index + activePhotos.length - 1) % activePhotos.length; render(); }
+      if (button.dataset.action === 'next') void navigate(1);
+      if (button.dataset.action === 'previous') void navigate(-1);
     }, options);
     scope.addEventListener('keydown', event => {
       if (!['Enter', ' '].includes(event.key)) return;
@@ -145,9 +182,9 @@ export function initGalleries() {
     dialog.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
       if (activePhotos.length < 2) return;
-      event.preventDefault(); index = (index + activePhotos.length + (event.key === 'ArrowRight' ? 1 : -1)) % activePhotos.length; render();
+      event.preventDefault(); void navigate(event.key === 'ArrowRight' ? 1 : -1);
     }, options);
-    cleanup.push(() => { lifetime.abort(); dialog.close(); wall(); diagnostic?.(); });
+    cleanup.push(() => { transition++; stopImageAnimations(); lifetime.abort(); dialog.close(); wall(); diagnostic?.(); });
   }
   return () => cleanup.forEach(stop => stop());
 }
