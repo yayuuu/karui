@@ -129,7 +129,7 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     }
     const home = path === '/' && !blocked;
     const selected = blocked ? undefined : content.pages.get(path) ?? [...content.pages.values()].filter((page) => page.plugin && path.startsWith(page.href + '/')).sort((a, b) => b.href.length - a.href.length)[0];
-    const sourcePage = selected ?? { title: t('Error 404'), href: '/404', html: `<br><br><h1 style="text-align:center">404<br>${t('The requested page does not exist.')}</h1><br><br>`, keywords: '', order: 0, gallery: [] } satisfies Page;
+    const sourcePage = selected ?? content.pages.get('/404') ?? { title: t('Error 404'), href: '/404', html: `<br><br><h1 style="text-align:center">404<br>${t('The requested page does not exist.')}</h1><br><br>`, keywords: '', order: 0, gallery: [] } satisfies Page;
     const page = { ...sourcePage, gallery: await galleryImages.describe(visibleGallery(sourcePage, `${request.protocol}://${request.host}`)) };
     if (home) { page.title = content.site.title; page.href = '/'; page.html = ''; }
     let status = home || selected ? 200 : 404;

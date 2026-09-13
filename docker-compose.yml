@@ -28,6 +28,7 @@ services:
       - /tmp:size=128m,mode=1777
       - /var/cache/karui:size=64m,uid=1000,gid=1000,mode=0700
     cap_drop: [ALL]
+    cap_add: [CHOWN, SETGID, SETUID]
     security_opt:
       - no-new-privileges:true
     mem_limit: 1024m

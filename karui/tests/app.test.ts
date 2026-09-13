@@ -47,10 +47,37 @@ test('SSR, fragment navigation, menu hierarchy, redirects and safe error pages u
   const remembered = await app.inject({ url: '/section/article', headers: { cookie: 'karui-language=pl' } });
   assert.match(remembered.body, /<strong>Witaj<\/strong>/);
   assert.match((await app.inject('/section/article?lang=fr')).body, /<strong>Hello<\/strong>/, 'Missing translations fall back to the default language');
+  const localizedFallback = await app.inject('/missing?lang=pl');
+  assert.equal(localizedFallback.statusCode, 404);
+  assert.match(localizedFallback.body, /Błąd 404/);
+  assert.match(localizedFallback.body, /Żądana strona nie istnieje\./);
   assert.equal((await app.inject('/index.php?p=section&s=article')).headers.location, '/section/article');
   for (const url of ['/content/site.yml', '/templates/page.edge', '/themes/sample/client.ts', '/assets/themes/default/bad/site.css']) {
     assert.equal((await app.inject(url)).statusCode, 404, url);
   }
   for (let index = 0; index < 305; index++) assert.equal((await app.inject('/')).statusCode, 200);
   assert.equal((await app.inject('/')).headers['x-ratelimit-limit'], '100000');
+});
+
+test('custom 404 pages use the requested language while retaining HTTP 404', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'engine-localized-404-'));
+  const content = join(root, 'content');
+  await mkdir(join(content, 'pages/404'), { recursive: true });
+  await writeFile(join(content, 'site.yml'), 'title: Test\nlanguage: pl\nlanguages: [en, pl]\nmenu: []\n');
+  await writeFile(join(content, 'pages/404/index.md'), '---\ntitle: Błąd 404\n---\nNie ma takiej strony');
+  await writeFile(join(content, 'pages/404/index.en.md'), '---\ntitle: Error 404\n---\nThis page does not exist');
+  const app = await buildApp({ ...configFromEnv(), contentDir: content, contentCacheDir: join(root, 'cache'), contentRefreshMs: 50 });
+  t.after(async () => { await app.close(); await rm(root, { recursive: true, force: true }); });
+
+  const polish = await app.inject('/missing?lang=pl');
+  assert.equal(polish.statusCode, 404);
+  assert.match(polish.body, /Nie ma takiej strony/);
+  assert.doesNotMatch(polish.body, /This page does not exist/);
+  assert.match(polish.body, /<html lang="pl">/);
+
+  const english = await app.inject('/missing?lang=en');
+  assert.equal(english.statusCode, 404);
+  assert.match(english.body, /This page does not exist/);
+  assert.doesNotMatch(english.body, /Nie ma takiej strony/);
+  assert.match(english.body, /<html lang="en">/);
 });

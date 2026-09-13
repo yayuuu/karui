@@ -8,6 +8,7 @@
 !content/.keep
 !karui/
 !karui/Dockerfile
+!karui/docker-entrypoint.sh
 !karui/tsconfig.json
 !karui/tsconfig.build.json
 

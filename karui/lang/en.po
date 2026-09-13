@@ -3,3 +3,8 @@ msgstr ""
 "Language: en\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Error 404"
+msgstr "Error 404"
+
+msgid "The requested page does not exist."
+msgstr "The requested page does not exist."

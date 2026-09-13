@@ -3,6 +3,12 @@ msgstr ""
 "Language: pl\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 
+msgid "Error 404"
+msgstr "Błąd 404"
+
+msgid "The requested page does not exist."
+msgstr "Żądana strona nie istnieje."
+
 msgid "Skip to content"
 msgstr "Przejdź do treści"
 
