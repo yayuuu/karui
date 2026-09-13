@@ -1,0 +1,140 @@
+name: Build and publish Docker image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - package.json
+      - package-lock.json
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Test, build and publish Karui
+    runs-on: [self-hosted, linux, debian-13]
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME || vars.DOCKERHUB_USERNAME }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Verify the Debian runner
+        run: |
+          test "$(. /etc/os-release && printf '%s' "$ID")" = "debian"
+          test "$(. /etc/os-release && printf '%s' "$VERSION_ID")" = "13"
+          docker info >/dev/null
+
+      - name: Detect a framework version change
+        id: version
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          node <<'NODE'
+          const { execFileSync } = require('node:child_process');
+          const { appendFileSync, readFileSync } = require('node:fs');
+
+          const manifest = JSON.parse(readFileSync('package.json', 'utf8'));
+          const lockfile = JSON.parse(readFileSync('package-lock.json', 'utf8'));
+          const version = manifest.version;
+          const lockedVersion = lockfile.packages?.['']?.version ?? lockfile.version;
+
+          if (!version || version !== lockedVersion) {
+            throw new Error(
+              `Framework version mismatch: package.json=${version}, package-lock.json=${lockedVersion}`,
+            );
+          }
+
+          let previousVersion = null;
+          const isManualRun = process.env.EVENT_NAME === 'workflow_dispatch';
+          const before = process.env.BEFORE_SHA;
+
+          if (!isManualRun && before && !/^0+$/.test(before)) {
+            try {
+              const previousManifest = JSON.parse(
+                execFileSync('git', ['show', `${before}:package.json`], { encoding: 'utf8' }),
+              );
+              previousVersion = previousManifest.version ?? null;
+            } catch {
+              previousVersion = null;
+            }
+          }
+
+          const changed = isManualRun || previousVersion === null || previousVersion !== version;
+          const [major, minor] = version.split('.');
+
+          if (!/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+            throw new Error(`Unsupported framework version: ${version}`);
+          }
+
+          appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\n`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `minor=${major}.${minor}\n`);
+          appendFileSync(process.env.GITHUB_OUTPUT, `changed=${changed}\n`);
+          console.log(
+            changed
+              ? `Publishing ${version} (previous version: ${previousVersion ?? 'unavailable'}).`
+              : `Framework version is still ${version}; the image will not be published.`,
+          );
+          NODE
+
+      - name: Install dependencies
+        if: steps.version.outputs.changed == 'true'
+        run: npm ci
+
+      - name: Run checks
+        if: steps.version.outputs.changed == 'true'
+        run: npm run check
+
+      - name: Validate Docker Hub credentials
+        if: steps.version.outputs.changed == 'true'
+        env:
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: |
+          test -n "$DOCKERHUB_USERNAME" || { echo "DOCKERHUB_USERNAME is not configured." >&2; exit 1; }
+          test -n "$DOCKERHUB_TOKEN" || { echo "DOCKERHUB_TOKEN is not configured." >&2; exit 1; }
+
+      - name: Log in to Docker Hub
+        if: steps.version.outputs.changed == 'true'
+        env:
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+        run: printf '%s' "$DOCKERHUB_TOKEN" | docker login --username "$DOCKERHUB_USERNAME" --password-stdin
+
+      - name: Build the Debian image
+        if: steps.version.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          IMAGE="${DOCKERHUB_USERNAME}/karui"
+          docker build \
+            --file karui/Dockerfile \
+            --label "org.opencontainers.image.source=${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            --label "org.opencontainers.image.revision=${GITHUB_SHA}" \
+            --label "org.opencontainers.image.version=${VERSION}" \
+            --tag "${IMAGE}:${VERSION}" \
+            --tag "${IMAGE}:latest" \
+            .
+
+      - name: Publish version and latest tags
+        if: steps.version.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          MINOR: ${{ steps.version.outputs.minor }}
+        run: |
+          IMAGE="${DOCKERHUB_USERNAME}/karui"
+          docker push "${IMAGE}:${VERSION}"
+          docker tag "${IMAGE}:${VERSION}" "${IMAGE}:${MINOR}"
+          docker push "${IMAGE}:${MINOR}"
+          docker push "${IMAGE}:latest"
