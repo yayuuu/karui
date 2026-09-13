@@ -24,7 +24,7 @@ async function fixture(t: { after: (fn: () => Promise<void>) => void }, concurre
       if (body.delay) await new Promise(resolve => setTimeout(resolve, body.delay));
       return {type:'json', data:{threadId, call, echo:body.echo, resourceLimits}};
     }`);
-  const context: PluginContext = { url: '/test', method: 'GET', body: null, suffix: '', basePath: '/test', mode: 'public', admin: null, assets: {}, language: 'en', defaultLanguage: 'en', content: { source: '', html: '', format: 'markdown' }, page: { href: '/test', title: 'Test', html: '', keywords: '', order: 0, gallery: [] }, pluginDir, contentRoot: root, storageDir: root };
+  const context: PluginContext = { url: '/test', method: 'GET', body: null, suffix: '', basePath: '/test', mode: 'public', admin: null, assets: {}, language: 'en', defaultLanguage: 'en', content: { source: '', html: '', format: 'markdown' }, page: { href: '/test', title: 'Test', html: '', keywords: '', order: 0, gallery: [] }, pluginDir, contentRoot: root, storageDir: root, cacheDir: join(root, 'plugin-data', 'test') };
   return { root, pluginDir, cacheDir, context };
 }
 async function until(check: () => boolean) {

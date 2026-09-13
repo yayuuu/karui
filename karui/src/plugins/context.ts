@@ -4,7 +4,7 @@ import type { PluginContext } from './contracts.js';
 
 export function createPluginContext(input: {
   url: string; method: string; body?: unknown; suffix: string; page: Page; contentRoot: string;
-  language?: string; defaultLanguage?: string; admin?: NonNullable<PluginContext['admin']>; basePath?: string;
+  cacheRoot: string; language?: string; defaultLanguage?: string; admin?: NonNullable<PluginContext['admin']>; basePath?: string;
 }): PluginContext {
   const { page, contentRoot, admin } = input;
   if (!page.plugin) throw new Error('Page has no plugin');
@@ -16,5 +16,6 @@ export function createPluginContext(input: {
     mode: admin ? 'admin' : 'public', admin: admin ?? null,
     assets: {},
     contentRoot, pluginDir: join(contentRoot, 'plugins', page.plugin), storageDir: join(contentRoot, 'state', page.plugin),
+    cacheDir: join(input.cacheRoot, 'plugin-data', page.plugin),
   };
 }

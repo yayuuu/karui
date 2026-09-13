@@ -23,6 +23,7 @@ Przy każdym żądaniu silnik przygotowuje `PluginContext` i przekazuje jego kop
 | `pluginDir` | Absolutna ścieżka `content/plugins/<nazwa>`. |
 | `contentRoot` | Absolutna ścieżka podmontowanego katalogu z treścią. |
 | `storageDir` | Absolutna ścieżka `content/state/<nazwa>`; wtyczka tworzy katalog w razie potrzeby. |
+| `cacheDir` | Absolutna ścieżka `CONTENT_CACHE_DIR/plugin-data/<nazwa>`. Zapisuj tam wyłącznie dane, które można odtworzyć. Katalog może znajdować się na tmpfs i zniknąć po restarcie; wtyczka tworzy go w razie potrzeby. |
 
 ## Dane strony (`page`)
 

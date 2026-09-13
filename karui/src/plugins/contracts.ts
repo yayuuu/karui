@@ -17,7 +17,11 @@ export type PluginContext = {
   admin: { login: string; role: 'owner' | 'admin'; csrf: string } | null;
   /** Version-pinned public URLs, keyed by paths relative to the plugin's assets directory. */
   assets: Readonly<Record<string, string>>;
-  pluginDir: string; contentRoot: string; storageDir: string;
+  pluginDir: string; contentRoot: string;
+  /** Durable, content-mounted state owned by this plugin. */
+  storageDir: string;
+  /** Re-creatable plugin cache under CONTENT_CACHE_DIR; it may be tmpfs and disappear after restart. */
+  cacheDir: string;
 };
 /** Return a template name, not HTML. The engine renders it inside the worker. */
 export type PluginResponse =

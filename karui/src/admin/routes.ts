@@ -171,7 +171,7 @@ export async function registerPanel(app: FastifyInstance, themes: Themes, config
       try {
         const result = await plugins.run(createPluginContext({
           url: request.url, method: request.method, body: request.body, suffix: suffix ? '/' + suffix : '',
-          basePath, page: edit.page, contentRoot: config.contentDir,
+          basePath, page: edit.page, contentRoot: config.contentDir, cacheRoot: config.contentCacheDir,
           language: edit.language, defaultLanguage: (await repository.load()).site.language,
           admin: { login: account.login, role: account.role, csrf: current.session.csrf },
         }));

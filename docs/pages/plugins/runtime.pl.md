@@ -253,13 +253,15 @@ Przed wdrożeniem wyślij kilka jednoczesnych żądań i sprawdź końcową zawa
 
 Stan zapisuj w `context.storageDir`. W razie potrzeby utwórz katalog przez `mkdir({recursive:true})`. Kompletny przykład odczytu, sprawdzenia danych i atomowego zapisu znajdziesz w `docs/plugins/example/index.ts`.
 
+Do danych możliwych do odtworzenia, np. odpowiedzi z API, przeskalowanego podglądu lub sparsowanego indeksu, używaj `context.cacheDir`. Jest osobny dla każdej wtyczki i znajduje się pod `CONTENT_CACHE_DIR`; w typowym wdrożeniu ten katalog jest montowany na tmpfs. Przed pierwszym zapisem utwórz go przez `mkdir({recursive:true})`. Jego zawartość może zniknąć po restarcie kontenera lub hosta, więc nie zapisuj tam ustawień, danych użytkowników, zadań, uploadów ani żadnego innego trwałego stanu.
+
 Wszystkie strony korzystające z danej wtyczki współdzielą `storageDir`. Jeśli chcesz rozdzielić stan stron lub zasobów, użyj bezpiecznego, powtarzalnego klucza, np. skrótu `page.href`. Nie używaj jako ścieżki niesprawdzonej wartości z URL.
 
 Katalog stanu nie jest dostępny przez HTTP. Danych, które mają przetrwać restart, nie przechowuj w zmiennych globalnych workera ani w cache na tmpfs.
 
 Pliki przeznaczone do publicznego pobierania umieszczaj w `content/media`. Silnik obsługuje PNG/JPEG/WebP/GIF, MOV/MP4/WebM, MP3/OGG, WOFF2 oraz HTML z osobną polityką CSP sandbox. Nie udostępnia automatycznie plików JSON, TS ani Edge.
 
-Własne pliki wtyczki możesz odczytywać przez API Node. `PluginContext` nie ma metod do edycji metadanych stron, galerii i kont ani do czyszczenia cache. Jeśli inne narzędzie zapisze poprawny plik w `pages` w sposób atomowy, silnik wykryje zmianę przy odświeżeniu cache.
+Własne pliki wtyczki możesz odczytywać przez API Node. `PluginContext` nie ma metod do edycji metadanych stron, galerii i kont ani do zarządzania cache silnika. Jeśli inne narzędzie zapisze poprawny plik w `pages` w sposób atomowy, silnik wykryje zmianę przy odświeżeniu cache.
 
 ## Limity rozmiaru i kolejki
 

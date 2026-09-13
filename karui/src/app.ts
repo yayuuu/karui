@@ -136,7 +136,7 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     let widgetHtml = '', clientUrl = '', styleUrl = '', pluginError = '';
     if (page.plugin && !home) {
       try {
-        const result = await plugins.run(createPluginContext({ url: request.url, method: request.method, body: request.body, suffix: path.slice(page.href.length), page, contentRoot: config.contentDir, language: locale.language, defaultLanguage: allContent.site.language }));
+        const result = await plugins.run(createPluginContext({ url: request.url, method: request.method, body: request.body, suffix: path.slice(page.href.length), page, contentRoot: config.contentDir, cacheRoot: config.contentCacheDir, language: locale.language, defaultLanguage: allContent.site.language }));
         if (result.type === 'json') return reply.code(result.status).send(result.data);
         status = result.status;
         widgetHtml = result.html;

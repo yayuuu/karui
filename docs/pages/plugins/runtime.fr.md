@@ -222,9 +222,11 @@ Avant le déploiement, envoyez des requêtes simultanées et contrôlez l’éta
 
 Stockez l’état dans `context.storageDir` et créez-le avec `mkdir({ recursive: true })`. Toutes les pages utilisant une extension partagent ce répertoire. Pour séparer leurs données, dérivez une clé déterministe sûre, par exemple un hash de `page.href` ; n’utilisez jamais une URL non validée comme chemin.
 
+Utilisez `context.cacheDir` pour les données recréables, par exemple une réponse d’API, un aperçu redimensionné ou un index analysé. Il est séparé pour chaque extension et se trouve sous `CONTENT_CACHE_DIR` ; les déploiements montent souvent ce répertoire sur tmpfs. Créez-le avec `mkdir({ recursive: true })` avant la première écriture. Son contenu peut disparaître après le redémarrage du conteneur ou de l’hôte : n’y stockez donc ni réglages, ni données utilisateur, ni tâches, ni envois de fichiers, ni autre état durable.
+
 Le répertoire d’état n’est pas servi par HTTP. Ne conservez pas les données durables dans les variables globales ou le cache tmpfs. Placez les téléchargements publics dans `content/media`. Le moteur sert PNG/JPEG/WebP/GIF, MOV/MP4/WebM, MP3/OGG, WOFF2 et HTML sandboxé, mais pas automatiquement JSON, TS ou Edge.
 
-L’extension peut lire ses fichiers avec les API Node. `PluginContext` ne permet pas de modifier les pages, galeries, comptes ou caches. Un outil externe écrivant atomiquement un fichier de page valide sera détecté au prochain rafraîchissement.
+L’extension peut lire ses fichiers avec les API Node. `PluginContext` ne permet pas de modifier les pages, galeries, comptes ou le cache du moteur. Un outil externe écrivant atomiquement un fichier de page valide sera détecté au prochain rafraîchissement.
 
 ## Limites de taille et de file
 

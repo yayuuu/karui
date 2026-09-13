@@ -222,9 +222,11 @@ Before deployment, send simultaneous requests and inspect final state, not only 
 
 Store state in `context.storageDir`, creating it with `mkdir({ recursive: true })`. All pages using a plugin share that directory. Derive safe deterministic keys such as a hash of `page.href` when separating page state; never use an unvalidated URL value as a path.
 
+Use `context.cacheDir` for reconstructable data such as a fetched API response, resized preview, or parsed index. It is separate for every plugin and is located below `CONTENT_CACHE_DIR`; deployments commonly mount that directory on tmpfs. Create it with `mkdir({ recursive: true })` before the first write. Its contents may disappear after a container or host restart, so do not store settings, user data, jobs, uploads, or any other durable state there.
+
 The state directory is not available over HTTP. Do not put durable state in worker globals or tmpfs cache. Put public downloads in `content/media`. The engine serves PNG/JPEG/WebP/GIF, MOV/MP4/WebM, MP3/OGG, WOFF2, and sandboxed HTML, but not JSON, TS, or Edge automatically.
 
-Plugins may read their own files with Node APIs. `PluginContext` has no methods to edit pages, galleries, accounts, or cache. An external tool that atomically writes a valid page file will be noticed on the next cache refresh.
+Plugins may read their own files with Node APIs. `PluginContext` has no methods to edit pages, galleries, accounts, or the engine cache. An external tool that atomically writes a valid page file will be noticed on the next cache refresh.
 
 ## Size and queue limits
 

@@ -23,6 +23,7 @@ Pour chaque requête, le moteur crée un `PluginContext` et en transmet une copi
 | `pluginDir` | Chemin absolu vers `content/plugins/<nom>`. |
 | `contentRoot` | Chemin absolu du répertoire de contenu monté. |
 | `storageDir` | Chemin absolu vers `content/state/<nom>` ; l’extension le crée si nécessaire. |
+| `cacheDir` | Chemin absolu vers `CONTENT_CACHE_DIR/plugin-data/<nom>`. Utilisez-le uniquement pour les données qui peuvent être recréées. Il peut se trouver sur tmpfs et disparaître après un redémarrage ; l’extension le crée si nécessaire. |
 
 ## Données de page (`page`)
 

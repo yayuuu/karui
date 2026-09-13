@@ -23,6 +23,7 @@ For every request, the engine creates a `PluginContext` and passes a copy to the
 | `pluginDir` | Absolute path to `content/plugins/<name>`. |
 | `contentRoot` | Absolute path to the mounted content directory. |
 | `storageDir` | Absolute path to `content/state/<name>`; the plugin creates it when necessary. |
+| `cacheDir` | Absolute path to `CONTENT_CACHE_DIR/plugin-data/<name>`. Use it only for data that can be rebuilt; it may be on tmpfs and disappear after a restart. Create it when necessary. |
 
 ## Page data (`page`)
 

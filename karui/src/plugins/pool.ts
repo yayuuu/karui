@@ -52,7 +52,13 @@ export class PluginPool {
 
   private spawn(permanent: boolean): Slot {
     const extension = import.meta.url.endsWith('.ts') ? 'ts' : 'js';
-    const worker = new Worker(new URL(`../plugin-worker.${extension}`, import.meta.url), { resourceLimits: { ...this.memoryLimits } });
+    const workerUrl = new URL(`../plugin-worker.${extension}`, import.meta.url);
+    const workerOptions = { resourceLimits: { ...this.memoryLimits } };
+    // Node does not apply a parent's TS loader to a Worker entrypoint. Register tsx
+    // inside an eval worker only in source-mode; production always loads the JS file.
+    const worker = extension === 'ts'
+      ? new Worker(`(async () => { const { register } = await import('tsx/esm/api'); register(); await import(${JSON.stringify(workerUrl.href)}); })().catch(error => { throw error; });`, { ...workerOptions, eval: true })
+      : new Worker(workerUrl, workerOptions);
     let readyResolve!: () => void, readyReject!: (error: Error) => void;
     const readyPromise = new Promise<void>((resolve, reject) => { readyResolve = resolve; readyReject = reject; });
     void readyPromise.catch(() => {});
