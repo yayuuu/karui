@@ -1,6 +1,6 @@
 {
   "name": "karui",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -14,6 +14,7 @@
     "build": "tsc -p karui/tsconfig.build.json && esbuild karui/src/client/main.ts karui/src/client/panel.ts --bundle --minify --format=esm --target=es2022 --outdir=karui/public/assets",
     "start": "node karui/dist/server.js",
     "typecheck": "tsc --noEmit -p karui/tsconfig.json",
+    "pretest": "npm run build",
     "test": "PLUGIN_WORKERS=1 PLUGIN_MAX_WORKERS=4 tsx --test karui/tests/*.test.ts",
     "test:content": "PLUGIN_WORKERS=1 PLUGIN_MAX_WORKERS=4 tsx karui/scripts/test-content.ts",
     "test:browser": "playwright test -c karui/playwright.config.ts",
@@ -21,7 +22,7 @@
     "plugins:install": "node karui/scripts/install-plugins.ts",
     "panel:init": "node karui/scripts/panel-account.ts",
     "create-template": "node karui/scripts/create-template.ts",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test"
   },
   "dependencies": {
     "@fastify/cookie": "^11.1.2",
