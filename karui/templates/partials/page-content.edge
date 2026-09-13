@@ -20,7 +20,7 @@
 @if(!page.plugin || page.pluginPlacement !== 'content')
   {{{ page.html }}}
 @end
-@if(page.gallery && page.gallery.length)
+@if(galleryEnabled)
   @include('gallery')
 @end
 @if(page.showSubpages !== false && children.length)

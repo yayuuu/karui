@@ -4,7 +4,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parsePage, siteSchema, navigation, type Photo } from '../src/content.js';
-import { visibleGallery } from '../src/gallery.js';
+import { inlineGallery, visibleGallery } from '../src/gallery.js';
 import { PanelFiles } from '../src/admin/files.js';
 import { PanelStore } from '../src/admin/store.js';
 import { buildApp } from '../src/app.js';
@@ -29,6 +29,18 @@ test('gallery visibility matches actual inline images, variants, relative URLs a
   assert.equal(visibleGallery({ ...page, galleryVisibility: 'all' }, 'https://example.test'), gallery);
   assert.deepEqual(visibleGallery({ ...page, galleryVisibility: 'hidden' }, 'https://example.test'), []);
   assert.match(page.html, /<img/);
+});
+
+test('inline gallery photos render their WebP preview and remain lightbox triggers', () => {
+  const photos: Photo[] = [{ src: '/media/gallery/photo.large.png', thumbnail: '/media/gallery/photo.small.webp', download: '/media/gallery/photo.download.png', alt: 'Preview' }];
+  const direct = inlineGallery('<p><img src="/media/gallery/photo.large.png" alt="Preview"></p>', '/article', photos);
+  assert.deepEqual(direct, { html: '<p><img src="/media/gallery/photo.large.png" alt="Preview"></p>', count: 0 });
+  const linked = inlineGallery('<a href="/media/gallery/photo.large.png"><img src="/media/gallery/photo.small.webp"></a>', '/article', photos);
+  assert.equal(linked.count, 1);
+  assert.match(linked.html, /<a href="\/media\/gallery\/photo\.large\.png" data-gallery-src="\/media\/gallery\/photo\.large\.png" class="inline-gallery-photo">/);
+  assert.match(linked.html, /loading="lazy" decoding="async"/);
+  assert.equal(inlineGallery('<a href="/media/gallery/photo.download.png"><img src="/media/gallery/photo.small.webp"></a>', '/article', photos).count, 0);
+  assert.equal(inlineGallery('<a href="/media/gallery/photo.large.png"><img src="/media/gallery/photo.large.png"></a>', '/article', photos).count, 0);
 });
 
 test('external menu links accept only safe absolute HTTP(S) addresses', () => {

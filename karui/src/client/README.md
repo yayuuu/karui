@@ -54,9 +54,8 @@ client/
   modelu menu z DOM. Klucze węzłów są stabilne i nie trafiają do zapisywanego YAML.
 - Operacje techniczne korzystają bezpośrednio z DOM: buforowe canvasy, pobieranie plików,
   ładowanie arkuszy, parsowanie HTML z Edge/Tiptap i ograniczony protokół workera.
-  To nie są komponenty UI. Galeria przestawia istniejące węzły zdjęć, zachowując
-  `decoding="sync"`, potrzebne do poprawnego wyświetlania w Vivaldi. Nie montuj tych
-  węzłów ponownie przez Preact.
+  To nie są komponenty UI. Galeria zarządza położeniem i cyklem życia istniejących
+  węzłów zdjęć, dlatego nie należy montować ich ponownie przez Preact.
 - Nie przekazuj treści zewnętrznych wtyczek do `dangerouslySetInnerHTML`. Wyjątkiem
   od deklaratywnego widoku jest kontrolowana granica wstawiania fragmentów Edge.
 - Zewnętrzne wtyczki umieszczaj w `content/plugins`; nie przenoś ich implementacji

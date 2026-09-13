@@ -14,6 +14,8 @@ Menu ma jeden wspólny układ. Linki, zagnieżdżenie i nazwy w języku domyśln
 
 Każda wersja językowa strony ma własne metadane galerii. Jeśli inny język zawiera już zdjęcia, w edytorze strony możesz rozwinąć opcjonalną operację **Skopiuj galerię z innego języka**. Lista pokazuje wyłącznie niepuste galerie źródłowe, a pliki obrazów są współdzielone zamiast powielane.
 
+Przycisk **Wstaw do treści** zapisuje zdjęcie galerii jako `[![Opis](photo.small.webp)](photo.large.png)` w Markdown albo równoważny odnośnik zawierający `<img>` w HTML. Karui otwiera taki podgląd w jednoelementowym lightboksie i pobiera duży obraz dopiero po kliknięciu. Mechanizm działa tylko wtedy, gdy miniatura i odnośnik należą do tego samego wpisu galerii. Zwykłe obrazy Markdown i samodzielne elementy `<img>` nie są modyfikowane.
+
 ## Uruchomienie lokalne
 
 W katalogu projektu, po zainstalowaniu zależności:

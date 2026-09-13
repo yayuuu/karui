@@ -123,7 +123,7 @@ Le plus simple est d’hériter de `components/layout.edge` et de modifier le CS
 
 `partials/page-content.edge` assemble le contenu, l’extension, la galerie et les sous-pages. `partials/home.edge` affiche l’accueil. Un thème peut laisser cette dernière vue vide si l’accueil ne doit pas montrer de conteneur. La navigation gère ce cas sans recharger le document.
 
-Le moteur fournit aux vues `site`, `page`, `submenu`, `children`, `back`, `home`, `print`, `styleUrl`, `assetVersion` et les données de l’extension. Les contrats et attributs exacts figurent dans les modèles par défaut. Conservez-les si vous remplacez la galerie ou le panneau : ils forment l’interface entre le HTML et le moteur.
+Le moteur fournit aux vues `site`, `page`, `galleryPhotos`, `galleryEnabled`, `submenu`, `children`, `back`, `home`, `print`, `styleUrl`, `assetVersion` et les données de l’extension. `page.gallery` contient les photos affichées dans la grille, tandis que `galleryPhotos` contient toutes les photos nécessaires pour reconnaître les aperçus intégrés au contenu. Les contrats et attributs exacts figurent dans les modèles par défaut. Conservez-les si vous remplacez la galerie ou le panneau : ils forment l’interface entre le HTML et le moteur.
 
 ## Code navigateur et transitions
 

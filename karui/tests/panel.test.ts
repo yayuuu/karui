@@ -4,6 +4,7 @@ import { cp, mkdir, mkdtemp, readFile, readdir, rm, symlink, writeFile } from 'n
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { PNG } from 'pngjs';
+import sharp from 'sharp';
 import { buildApp } from '../src/app.js';
 import { configFromEnv } from '../src/config.js';
 import { hashPassword } from '../src/admin/password.js';
@@ -230,7 +231,12 @@ test('integrated panel: authentication, files, galleries and tree menu', async t
     const response = await upload(image); assert.equal(response.statusCode, 200, response.body);
     const photo = response.json().photo;
     assert.match(photo.src, /^\/media\/gallery\/[a-f0-9-]+\.large\.png$/);
-    for (const url of [photo.src, photo.thumbnail, photo.download]) { const image = await app.inject(url); assert.equal(image.statusCode, 200); assert.equal(PNG.sync.read(image.rawPayload).width, 20); }
+    assert.match(photo.thumbnail, /^\/media\/gallery\/[a-f0-9-]+\.small\.webp$/);
+    for (const url of [photo.src, photo.thumbnail, photo.download]) {
+      const image = await app.inject(url); assert.equal(image.statusCode, 200);
+      assert.equal((await sharp(image.rawPayload).metadata()).width, 20);
+    }
+    assert.equal((await sharp((await app.inject(photo.thumbnail)).rawPayload).metadata()).format, 'webp');
     const page = await store.page('/panel-test'); assert.equal(page.page.gallery.length, 1); assert.match(page.body, /Nowa treść/);
     const publicPage = await app.inject('/panel-test'); assert.match(publicPage.body, /data-gallery/); assert.doesNotMatch(publicPage.body, /plugin-assets\/gallery/);
     const removed = await admin.post('/panel/api/photos/change', { path: page.page.href, revision: page.revision, index: 0, action: 'delete' }); assert.equal(removed.statusCode, 200, removed.body);

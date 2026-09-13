@@ -1,7 +1,7 @@
-<section data-gallery data-photos="{{ JSON.stringify(page.gallery) }}">
+<section data-gallery data-photos="{{ JSON.stringify(page.gallery) }}" data-gallery-items="{{ JSON.stringify(galleryPhotos) }}">
 <div class="gallery">
   @each((photo, index) in page.gallery)
-    <a class="imgframe" href="{{ photo.src }}" data-action="open" data-value="{{ index }}" aria-label="{{ photo.alt || t('Photo {number}', { number: index + 1 }) }}"><img src="{{ photo.src }}" width="{{ photo.width }}" height="{{ photo.height }}" loading="{{ index < 8 ? 'eager' : 'lazy' }}" decoding="sync" alt="{{ photo.alt }}"></a>
+    <a class="imgframe" href="{{ photo.src }}" data-action="open" data-gallery-src="{{ photo.src }}" aria-label="{{ photo.alt || t('Photo {number}', { number: index + 1 }) }}"><img src="{{ photo.thumbnail || photo.src }}" width="{{ photo.width }}" height="{{ photo.height }}" loading="{{ index < 4 ? 'eager' : 'lazy' }}" decoding="sync" alt="{{ photo.alt }}"></a>
   @end
 </div>
 <dialog class="lightbox" aria-label="{{ t('Photo preview') }}">

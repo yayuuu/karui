@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="{{ theme.assets['ui.css'] }}">
   <link rel="stylesheet" href="{{ theme.assets['code.css'] }}">
   <link rel="stylesheet" href="{{ theme.assets['tables.css'] }}">
-  @if(page.gallery && page.gallery.length)
+  @if(galleryEnabled)
     <link rel="stylesheet" data-page-style href="{{ theme.assets['gallery.css'] }}">
   @end
   @if(styleUrl)

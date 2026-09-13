@@ -123,7 +123,7 @@ The simplest approach is to inherit `components/layout.edge` and change CSS. If 
 
 `partials/page-content.edge` combines content, plugin output, gallery, and subpages. `partials/home.edge` renders the home view. A theme may leave the latter empty when its home page should show no content container. Navigation supports this without reloading the document.
 
-Views receive `site`, `page`, `submenu`, `children`, `back`, `home`, `print`, `styleUrl`, `assetVersion`, and plugin data from the engine. Exact contracts and attributes are shown in the default templates. Preserve them when replacing the gallery or panel: they form the interface between HTML and engine code.
+Views receive `site`, `page`, `galleryPhotos`, `galleryEnabled`, `submenu`, `children`, `back`, `home`, `print`, `styleUrl`, `assetVersion`, and plugin data from the engine. `page.gallery` contains the photos displayed in the grid, while `galleryPhotos` contains all photos needed to resolve previews embedded in the content. Exact contracts and attributes are shown in the default templates. Preserve them when replacing the gallery or panel: they form the interface between HTML and engine code.
 
 ## Browser code and transitions
 

@@ -13,7 +13,7 @@ import { configFromEnv, type Config } from './config.js';
 import { PluginRunner } from './plugins.js';
 import { createPluginContext } from './plugins/context.js';
 import { registerPanel } from './admin/routes.js';
-import { GalleryImages, visibleGallery } from './gallery.js';
+import { GalleryImages, inlineGallery, visibleGallery } from './gallery.js';
 import { isPublished, publicContent } from './content/public.js';
 import { fragmentType, type PageFragment } from './page-fragment.js';
 import { Themes } from './themes/index.js';
@@ -130,7 +130,12 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     const home = path === '/' && !blocked;
     const selected = blocked ? undefined : content.pages.get(path) ?? [...content.pages.values()].filter((page) => page.plugin && path.startsWith(page.href + '/')).sort((a, b) => b.href.length - a.href.length)[0];
     const sourcePage = selected ?? content.pages.get('/404') ?? { title: t('Error 404'), href: '/404', html: `<br><br><h1 style="text-align:center">404<br>${t('The requested page does not exist.')}</h1><br><br>`, keywords: '', order: 0, gallery: [] } satisfies Page;
-    const page = { ...sourcePage, gallery: await galleryImages.describe(visibleGallery(sourcePage, `${request.protocol}://${request.host}`)) };
+    const origin = `${request.protocol}://${request.host}`;
+    const visiblePhotos = visibleGallery(sourcePage, origin);
+    const galleryPhotos = await galleryImages.describe(sourcePage.gallery);
+    const visibleSources = new Set(visiblePhotos.map(photo => photo.src));
+    const embeddedGallery = inlineGallery(sourcePage.html, sourcePage.href, galleryPhotos, origin);
+    const page = { ...sourcePage, html: embeddedGallery.html, gallery: galleryPhotos.filter(photo => visibleSources.has(photo.src)) };
     if (home) { page.title = content.site.title; page.href = '/'; page.html = ''; }
     let status = home || selected ? 200 : 404;
     let widgetHtml = '', clientUrl = '', styleUrl = '', pluginError = '';
@@ -154,7 +159,7 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     const print = ['print', 'pdf'].includes(url.searchParams.get('m') ?? '');
     const footerHtml = content.site.footer ? renderPageContent(content.site.footer, content.site.footerFormat) : '';
     const view = {
-      site: { ...content.site, language: locale.language, menu: nav.menu }, page, ...nav, home, widgetHtml, clientUrl, styleUrl,
+      site: { ...content.site, language: locale.language, menu: nav.menu }, page, galleryPhotos, galleryEnabled: page.gallery.length > 0 || embeddedGallery.count > 0, ...nav, home, widgetHtml, clientUrl, styleUrl,
       pluginError, footerHtml, assetVersion, notFound: status === 404, print, theme, t, language: locale.language,
       languageLinks: languageLinks(request.url, content.site.languages, locale.language), clientTranslations: clientMessages(t),
     };
@@ -166,7 +171,7 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
         content: await edge.render(home ? 'partials/home' : 'partials/page-content', view),
         submenu: await edge.render('partials/submenu', view), back: nav.back,
         menu: await edge.render('partials/menu', view),
-        styles: [...(page.gallery.length ? [theme.assets['gallery.css']!] : []), ...(styleUrl ? [styleUrl] : [])],
+        styles: [...((page.gallery.length || embeddedGallery.count) ? [theme.assets['gallery.css']!] : []), ...(styleUrl ? [styleUrl] : [])],
       };
       return reply.type(fragmentType).send(fragment);
     }

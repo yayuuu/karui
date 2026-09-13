@@ -295,12 +295,13 @@ export class PanelStore {
     if (!['jpeg', 'png', 'webp', 'gif', 'avif'].includes(format ?? '')) throw new PanelError('Allowed image formats are JPEG, PNG, WebP, GIF and AVIF.');
     const id = randomUUID();
     const prefix = `media/gallery/${id}`;
-    const photo = photoSchema.parse({ src: '/' + prefix + '.large.png', thumbnail: '/' + prefix + '.small.png', download: '/' + prefix + '.download.png', alt });
+    const photo = photoSchema.parse({ src: '/' + prefix + '.large.png', thumbnail: '/' + prefix + '.small.webp', download: '/' + prefix + '.download.png', alt });
     const created: string[] = [];
     try {
-      for (const [size, width, height] of [['small', 300, 200], ['large', 1600, 1200], ['download', 5000, 5000]] as const) {
-        const data = await image.clone().rotate().resize(width, height, { fit: 'inside', withoutEnlargement: true }).png().toBuffer();
-        const file = prefix + '.' + size + '.png';
+      for (const [size, width, height, format] of [['small', 640, 480, 'webp'], ['large', 1600, 1200, 'png'], ['download', 5000, 5000, 'png']] as const) {
+        const resized = image.clone().rotate().resize(width, height, { fit: 'inside', withoutEnlargement: true });
+        const data = format === 'webp' ? await resized.webp({ quality: 82, effort: 4 }).toBuffer() : await resized.png().toBuffer();
+        const file = `${prefix}.${size}.${format}`;
         await this.files.write(file, data); created.push(file);
       }
       const result = await this.updateGallery(original, [...original.page.gallery, photo]);

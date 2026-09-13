@@ -48,6 +48,22 @@ test('Markdown is the default, visual edits serialize Markdown and preserve manu
   await expect(page.locator('[data-source]')).toHaveValue(/<section class="custom">/);
 });
 
+test('HTML editing inserts gallery previews as links to their full images', async ({ page }) => {
+  await create(page, 'HTML gallery insert');
+  await page.getByLabel('Format treści').selectOption('html');
+  const png = new PNG({ width: 40, height: 30 }); png.data.fill(255);
+  await page.locator('input[type=file]').setInputFiles({ name: 'html-gallery.png', mimeType: 'image/png', buffer: PNG.sync.write(png) });
+  await page.getByRole('button', { name: 'Dodaj zdjęcie', exact: true }).click();
+  await expect(page.locator('.panel-photo')).toHaveCount(1);
+  await page.locator('.panel-photo').first().getByRole('button', { name: 'Wstaw do treści' }).click();
+  await page.getByRole('button', { name: 'Źródło HTML', exact: true }).click();
+  const source = await page.locator('[data-source]').inputValue();
+  expect(source).toMatch(/<a\b[^>]*href="[^"]+\.large\.png"[^>]*>\s*<img\b[^>]*src="[^"]+\.small\.webp"[^>]*><\/a>/);
+  await Promise.all([page.waitForEvent('load'), page.getByRole('button', { name: 'Zapisz zmiany', exact: true }).click()]);
+  await page.goto('/html-gallery-insert');
+  await expect(page.locator('.inline-gallery-photo img')).toHaveAttribute('src', /\.small\.webp$/);
+});
+
 test('page save bar stays at the top while editing long content', async ({ page }) => {
   await login(page);
   await page.setViewportSize({ width: 1000, height: 600 });
@@ -116,8 +132,17 @@ test('background upload queue preserves unsaved text, updates revisions and supp
   await page.getByLabel('Widoczność galerii').selectOption('hidden');
   await Promise.all([page.waitForEvent('load'), page.getByRole('button', { name: 'Zapisz zmiany', exact: true }).click()]);
   await page.goto('/background-uploads');
-  await expect(page.locator('[data-gallery]')).toHaveCount(0);
-  await expect(page.locator('#page img')).toHaveCount(1);
+  await expect(page.locator('[data-gallery]')).toHaveCount(1);
+  await expect(page.locator('.imgframe')).toHaveCount(0);
+  const inlinePhoto = page.locator('.inline-gallery-photo').first();
+  await expect(inlinePhoto.locator('img')).toHaveAttribute('src', /\.small\.webp$/);
+  await inlinePhoto.click();
+  await expect(page.locator('dialog.lightbox')).toBeVisible();
+  await expect(page.locator('[data-gallery-image]')).toHaveAttribute('src', /\.large\.png$/);
+  await expect(page.locator('[data-gallery-counter]')).toContainText('1 z 1');
+  await expect(page.locator('.photo-navigation')).toHaveCount(2);
+  expect(await page.locator('.photo-navigation').evaluateAll(buttons => buttons.every(button => (button as HTMLButtonElement).hidden))).toBe(true);
+  await page.keyboard.press('Escape');
   await page.goto('/panel/page?path=/background-uploads');
   await page.getByLabel('Strona opublikowana').uncheck();
   await Promise.all([page.waitForEvent('load'), page.getByRole('button', { name: 'Zapisz zmiany', exact: true }).click()]);

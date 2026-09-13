@@ -123,7 +123,7 @@ Najprościej odziedziczyć `components/layout.edge` i zmienić CSS. Jeśli zast�
 
 `partials/page-content.edge` składa treść, wtyczkę, galerię i podstrony. `partials/home.edge` odpowiada za stronę główną. Motyw może pozostawić ten ostatni widok pusty, jeśli jego layout nie pokazuje kontenera na stronie głównej. Nawigacja obsługuje taki wariant bez przeładowania dokumentu.
 
-Silnik udostępnia w widoku `site`, `page`, `submenu`, `children`, `back`, `home`, `print`, `styleUrl`, `assetVersion` oraz dane wtyczki. Dokładne kontrakty i atrybuty znajdziesz w domyślnych szablonach. Zachowaj je, jeśli nadpisujesz galerię lub panel: to interfejs pomiędzy HTML a kodem silnika.
+Silnik udostępnia w widoku `site`, `page`, `galleryPhotos`, `galleryEnabled`, `submenu`, `children`, `back`, `home`, `print`, `styleUrl`, `assetVersion` oraz dane wtyczki. `page.gallery` zawiera zdjęcia wyświetlane w siatce, a `galleryPhotos` wszystkie zdjęcia potrzebne do rozpoznawania podglądów osadzonych w treści. Dokładne kontrakty i atrybuty znajdziesz w domyślnych szablonach. Zachowaj je, jeśli nadpisujesz galerię lub panel: to interfejs pomiędzy HTML a kodem silnika.
 
 ## Kod przeglądarkowy i przejścia
 

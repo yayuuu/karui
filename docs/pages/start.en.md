@@ -14,6 +14,8 @@ The menu has one shared structure. Links, nesting, and default-language names re
 
 Each language version of a page has its own gallery metadata. If another language already contains photos, the page editor offers the optional collapsed **Copy gallery from another language** action. The list contains only non-empty source galleries, and image files are shared rather than duplicated.
 
+**Insert into content** stores a gallery photo as `[![Description](photo.small.webp)](photo.large.png)` in Markdown, or as an equivalent linked `<img>` in HTML. Karui opens that preview in a one-photo lightbox and downloads the large image only after it is clicked. The enhancement applies only when the thumbnail and link belong to the same gallery entry. Ordinary Markdown images and standalone `<img>` elements are not changed.
+
 ## Running locally
 
 From the project directory, after installing dependencies:

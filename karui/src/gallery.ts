@@ -2,7 +2,7 @@ import { stat } from 'node:fs/promises';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { containedFile, type Page, type Photo } from './content.js';
-import { parseFragment, type DefaultTreeAdapterMap } from 'parse5';
+import { parseFragment, serialize, type DefaultTreeAdapterMap } from 'parse5';
 
 const usedImages = new WeakMap<Page, string[]>();
 export function visibleGallery(page: Page, origin: string): Photo[] {
@@ -30,6 +30,49 @@ export function visibleGallery(page: Page, origin: string): Photo[] {
   };
   const used = new Set(images.map(normalize).filter(Boolean));
   return page.gallery.filter(photo => ![photo.src, photo.thumbnail, photo.download].some(src => src && used.has(normalize(src))));
+}
+
+type Element = DefaultTreeAdapterMap['element'];
+const attribute = (element: Element, name: string) => element.attrs.find(item => item.name === name)?.value;
+const setAttribute = (element: Element, name: string, value: string) => {
+  const existing = element.attrs.find(item => item.name === name);
+  if (existing) existing.value = value;
+  else element.attrs.push({ name, value });
+};
+const mediaPath = (value: string, href: string, origin: string) => {
+  try {
+    const base = new URL(href, origin), url = new URL(value, base);
+    return url.origin === base.origin ? decodeURIComponent(url.pathname) : '';
+  }
+  catch { return ''; }
+};
+
+/** Turn gallery photos embedded in page content into lightweight, accessible lightbox triggers. */
+export function inlineGallery(html: string, href: string, photos: Photo[], origin = 'http://karui.invalid'): { html: string; count: number } {
+  if (!photos.length || !html.includes('<img')) return { html, count: 0 };
+  const bySource = new Map(photos.map(photo => [mediaPath(photo.src, href, origin), photo]));
+  const byThumbnail = new Map(photos.map(photo => [mediaPath(photo.thumbnail, href, origin), photo]));
+  const fragment = parseFragment(html);
+  let count = 0;
+  const visit = (node: DefaultTreeAdapterMap['node'], parent?: DefaultTreeAdapterMap['parentNode']) => {
+    if ('tagName' in node && node.tagName === 'img') {
+      const link = parent && 'tagName' in parent && parent.tagName === 'a' ? parent : undefined;
+      const preview = byThumbnail.get(mediaPath(attribute(node, 'src') ?? '', href, origin));
+      const target = link ? bySource.get(mediaPath(attribute(link, 'href') ?? '', href, origin)) : undefined;
+      if (link && preview && target?.src === preview.src) {
+        if (!attribute(node, 'loading')) setAttribute(node, 'loading', 'lazy');
+        if (!attribute(node, 'decoding')) setAttribute(node, 'decoding', 'async');
+        setAttribute(link, 'href', preview.src);
+        setAttribute(link, 'data-gallery-src', preview.src);
+        const classes = new Set((attribute(link, 'class') ?? '').split(/\s+/).filter(Boolean));
+        classes.add('inline-gallery-photo'); setAttribute(link, 'class', [...classes].join(' '));
+        count++;
+      }
+    }
+    if ('childNodes' in node) for (const child of node.childNodes) visit(child, node);
+  };
+  visit(fragment);
+  return count ? { html: serialize(fragment), count } : { html, count: 0 };
 }
 
 type Dimensions = { width: number; height: number };

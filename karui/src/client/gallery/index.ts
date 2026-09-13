@@ -84,6 +84,8 @@ export function initGalleries() {
     const diagnostic = initGalleryDiagnostics(root);
     const wall = initPhotoWall(root.querySelector<HTMLElement>('.gallery')!);
     const photos: Photo[] = JSON.parse(root.dataset.photos ?? '[]');
+    const galleryItems: Photo[] = JSON.parse(root.dataset.galleryItems ?? root.dataset.photos ?? '[]');
+    const scope = root.closest<HTMLElement>('#page') ?? root.parentElement ?? root;
     const dialog = root.querySelector<HTMLDialogElement>('dialog')!;
     const image = root.querySelector<HTMLImageElement>('[data-gallery-image]')!;
     const download = root.querySelector<HTMLAnchorElement>('[data-gallery-download]')!;
@@ -105,26 +107,45 @@ export function initGalleries() {
       pointerStartedOutside = false;
       if (dismiss) dialog.close();
     }, options);
-    let index = 0;
+    let activePhotos = photos, index = 0;
     const render = () => {
-      const photo = photos[index];
+      const photo = activePhotos[index];
       if (!photo) return;
       image.src = photo.src; image.alt = photo.alt;
       download.href = photo.download ?? photo.src;
-      counter.textContent = t('Photo {current} of {total}', { current: index + 1, total: photos.length });
+      counter.textContent = t('Photo {current} of {total}', { current: index + 1, total: activePhotos.length });
+      for (const button of root.querySelectorAll<HTMLButtonElement>('.photo-navigation')) button.hidden = activePhotos.length < 2;
     };
-    root.addEventListener('click', event => {
-      const button = (event.target as Element).closest<HTMLElement>('[data-action]');
-      if (!button || !photos.length) return;
+    const selectedIndex = (items: Photo[], button: HTMLElement) => items.findIndex(photo => photo.src === button.dataset.gallerySrc);
+    scope.addEventListener('click', event => {
+      const button = (event.target as Element).closest<HTMLElement>('[data-action], [data-gallery-src]');
+      if (!button) return;
       event.preventDefault();
-      if (button.dataset.action === 'open') { index = Number(button.dataset.value); render(); dialog.showModal(); }
+      if (button.dataset.action === 'open') {
+        const selected = selectedIndex(photos, button);
+        if (selected < 0) return;
+        activePhotos = photos; index = selected; render(); dialog.showModal();
+      } else if (button.dataset.gallerySrc) {
+        const selected = selectedIndex(galleryItems, button);
+        if (selected < 0) return;
+        activePhotos = [galleryItems[selected]!]; index = 0; render(); dialog.showModal();
+      }
       if (button.dataset.action === 'close') dialog.close();
-      if (button.dataset.action === 'next') { index = (index + 1) % photos.length; render(); }
-      if (button.dataset.action === 'previous') { index = (index + photos.length - 1) % photos.length; render(); }
+      if (button.dataset.action === 'next' && activePhotos.length) { index = (index + 1) % activePhotos.length; render(); }
+      if (button.dataset.action === 'previous' && activePhotos.length) { index = (index + activePhotos.length - 1) % activePhotos.length; render(); }
+    }, options);
+    scope.addEventListener('keydown', event => {
+      if (!['Enter', ' '].includes(event.key)) return;
+      const trigger = (event.target as Element).closest<HTMLElement>('[data-gallery-src]');
+      if (!trigger || trigger.tagName === 'A') return;
+      const selected = selectedIndex(galleryItems, trigger);
+      if (selected < 0) return;
+      event.preventDefault(); activePhotos = [galleryItems[selected]!]; index = 0; render(); dialog.showModal();
     }, options);
     dialog.addEventListener('keydown', event => {
       if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-      event.preventDefault(); index = (index + photos.length + (event.key === 'ArrowRight' ? 1 : -1)) % photos.length; render();
+      if (activePhotos.length < 2) return;
+      event.preventDefault(); index = (index + activePhotos.length + (event.key === 'ArrowRight' ? 1 : -1)) % activePhotos.length; render();
     }, options);
     cleanup.push(() => { lifetime.abort(); dialog.close(); wall(); diagnostic?.(); });
   }

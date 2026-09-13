@@ -9,6 +9,7 @@ import { renderContent, type ContentFormat } from '../../../content/format.js';
 import { editableHtml, editorHtml, PreservedHtml, PreservedInlineHtml } from './html.js';
 import { mountEditorToolbar } from './toolbar.js';
 import { t } from '../../i18n.js';
+import type { Photo } from '../../../content.js';
 
 export function initEditor(root: HTMLElement, dirty: () => void) {
   const source = root.querySelector<HTMLTextAreaElement>('[data-source]')!;
@@ -22,7 +23,7 @@ export function initEditor(root: HTMLElement, dirty: () => void) {
     element: root.querySelector<HTMLElement>('[data-editor-content]')!,
     extensions: [
       StarterKit.configure({ link: { openOnClick: false }, underline: format === 'html' ? {} : false }),
-      Image, TableKit, Markdown, PreservedHtml, PreservedInlineHtml,
+      Image.configure({ inline: true }), TableKit, Markdown, PreservedHtml, PreservedInlineHtml,
       ...(format === 'html' ? [TextStyleKit, TextAlign.configure({ types: ['heading', 'paragraph'] })] : []),
     ],
     content: editableHtml(source.value, format),
@@ -69,11 +70,17 @@ export function initEditor(root: HTMLElement, dirty: () => void) {
   });
   return {
     source: () => { if (mode === 'visual') sync(); return source.value; },
-    insertImage: (src: string) => {
-      if (mode === 'visual') editor.chain().focus().setImage({ src }).run();
+    insertImage: (photo: Photo) => {
+      const link = document.createElement('a'); link.href = photo.src;
+      const image = document.createElement('img'); image.src = photo.thumbnail; image.alt = photo.alt;
+      link.append(image);
+      const html = link.outerHTML;
+      if (mode === 'visual') editor.chain().focus().insertContent(html).run();
       else {
-        const image = document.createElement('img'); image.setAttribute('src', src); image.alt = '';
-        source.value += format === 'markdown' ? `\n\n![](${src})\n` : `\n${image.outerHTML}\n`;
+        const alt = photo.alt.replaceAll('\\', '\\\\').replaceAll('[', '\\[').replaceAll(']', '\\]').replaceAll('\n', ' ');
+        source.value += format === 'markdown'
+          ? `\n\n[![${alt}](${photo.thumbnail})](${photo.src})\n`
+          : `\n${html}\n`;
         dirty(); refreshView();
       }
     },

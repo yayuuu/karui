@@ -14,6 +14,8 @@ Le menu possède une structure unique et partagée. Les liens, l’imbrication e
 
 Chaque version linguistique d’une page possède ses propres métadonnées de galerie. Si une autre langue contient déjà des photos, l’éditeur propose l’action facultative et repliée **Copier la galerie depuis une autre langue**. La liste ne contient que les galeries sources non vides et les fichiers image sont partagés plutôt que dupliqués.
 
+Le bouton **Insérer dans le contenu** enregistre une photo sous la forme `[![Description](photo.small.webp)](photo.large.png)` en Markdown, ou comme un lien contenant un élément `<img>` équivalent en HTML. Karui ouvre cet aperçu dans une visionneuse contenant une seule photo et ne télécharge la grande image qu’après le clic. Ce comportement s’applique uniquement lorsque la miniature et le lien appartiennent à la même entrée de galerie. Les images Markdown ordinaires et les éléments `<img>` autonomes ne sont pas modifiés.
+
 ## Exécution locale
 
 Depuis le répertoire du projet, après l’installation des dépendances :

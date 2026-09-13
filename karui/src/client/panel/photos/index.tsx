@@ -12,7 +12,7 @@ type Services = {
   copy: (sourceLanguage: string) => Promise<PhotoResponse>;
   committed: (result: PhotoResponse) => void;
   busy: (value: boolean) => void;
-  insert: (src: string) => void;
+  insert: (photo: Photo) => void;
   error: (error: unknown) => void;
 };
 
@@ -27,7 +27,7 @@ function PhotoCard({ photo, index, busy, services, change }: { photo: Photo; ind
       <button type="button" disabled={busy} onClick={() => change(index, 'alt', alt)}>{t('Save description')}</button>
       <button type="button" disabled={busy} class="danger" onClick={() => change(index, 'delete', alt)}>{t('Delete')}</button>
     </div>
-    <button type="button" class="quiet" onClick={() => services.insert(photo.src)}>{t('Insert into content')}</button>
+    <button type="button" class="quiet" onClick={() => services.insert(photo)}>{t('Insert into content')}</button>
   </div>;
 }
 
