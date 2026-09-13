@@ -1,0 +1,13 @@
+<div class="example-admin" data-context="{{ JSON.stringify(clientContext) }}">
+  <form method="post" action="{{ action }}">
+    <input type="hidden" name="_csrf" value="{{ csrf }}">
+    <label>Wiadomość przykładu<input name="notice" value="{{ settings.notice }}" maxlength="200" required></label>
+    <button type="submit">Zapisz wiadomość</button>
+  </form>
+  @if(saved)
+    <p role="status">Zapisano wiadomość.</p>
+  @end
+  <p>Licznik: <strong data-count>{{ settings.count }}</strong></p>
+  <button type="button" data-action="increment">Zwiększ licznik w tle</button>
+  <p data-save-status role="status"></p>
+</div>

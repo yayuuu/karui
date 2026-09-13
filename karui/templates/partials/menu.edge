@@ -1,0 +1,8 @@
+<template data-mobile-menu data-items="{{ JSON.stringify(site.menu) }}"></template>
+<ul class="menu">
+  @each(item in site.menu)
+    <li>
+      @include('partials/menu-link')
+    </li>
+  @end
+</ul>

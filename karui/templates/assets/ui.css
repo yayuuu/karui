@@ -1,0 +1,61 @@
+/* Shared primitives. Low-specificity native defaults leave widget layouts in charge. */
+:root {
+  --ui-radius: 8px;
+  --ui-line: var(--ui-control-border);
+  --ui-muted: color-mix(in srgb, var(--page-text) 65%, transparent);
+  --ui-tint: color-mix(in srgb, var(--ui-accent) 8%, transparent);
+  --ui-rule: color-mix(in srgb, var(--ui-accent) 22%, transparent);
+}
+
+:where(#page) :where(input:not([type]), input[type=text], input[type=email], input[type=password], input[type=search], input[type=url], input[type=tel], input[type=number], input[type=date], input[type=time], input[type=datetime-local], select, textarea) {
+  box-sizing: border-box;
+  max-width: 100%; min-width: 0;
+  padding: .55rem .7rem;
+  border: 1px solid var(--ui-control-border); border-radius: var(--ui-radius);
+  background: var(--ui-control-bg); color: var(--ui-control-text);
+  font: inherit; accent-color: var(--ui-accent);
+}
+:where(#page) :where(button, input[type=submit], input[type=button], input[type=reset]) {
+  padding: .5rem .8rem;
+  border: 1px solid var(--ui-control-border); border-radius: var(--ui-radius);
+  background: var(--ui-control-bg); color: var(--ui-control-text);
+  font: inherit; cursor: pointer;
+}
+:where(#page) :where(input[type=checkbox], input[type=radio], input[type=range], progress) { accent-color: var(--ui-accent); }
+:where(#page) :where(input, select, textarea, button):focus-visible {
+  outline: 2px solid var(--ui-accent); outline-offset: 3px;
+}
+:where(#page) :where(input, select, textarea, button):disabled { opacity: .5; cursor: not-allowed; }
+:where(#page) :where(fieldset, details) {
+  min-width: 0; margin: 1rem 0; padding: 1rem;
+  border: 1px solid var(--ui-line); border-radius: var(--ui-radius); background: transparent;
+}
+:where(#page) :where(legend) { padding: 0 .4rem; font-weight: 500; }
+:where(#page) :where(summary) { cursor: pointer; font-weight: 500; }
+:where(#page) :where(summary)::marker { color: var(--ui-accent); }
+:where(#page) :where(blockquote) {
+  margin: 1rem 0; padding: .5rem 1rem; border-inline-start: 3px solid var(--ui-accent); color: var(--ui-muted);
+}
+:where(#page) :where(hr) { margin: 1.25rem 0; border: 0; border-top: 1px solid var(--ui-line); }
+
+/* Sections opt in: a semantic <section> alone never implies a filled card. */
+.ui-section { min-width: 0; background: transparent; color: inherit; }
+.ui-section-heading { margin: 0; font-weight: 500; color: var(--page-text); }
+.ui-surface { padding: 1rem; border: 1px solid var(--ui-line); border-radius: var(--ui-radius); background: transparent; }
+.ui-badge {
+  display: inline-flex; align-items: center; gap: .4em;
+  padding: .15rem .5rem; border-radius: 999px;
+  background: var(--ui-tint); color: var(--ui-accent);
+  font-size: .6875rem; font-weight: 500; line-height: 1.5; white-space: nowrap;
+}
+.ui-empty { margin: 0; padding: 1.25rem .25rem; color: var(--ui-muted); font-size: .8125rem; line-height: 1.6; }
+.ui-notice {
+  margin: 0 0 1rem; padding: .75rem 1rem;
+  border: 1px solid var(--ui-line); border-inline-start: 3px solid var(--ui-accent);
+  border-radius: var(--ui-radius); background: var(--ui-tint); color: inherit;
+}
+@media (hover: hover) and (pointer: fine) {
+  :where(#page) :where(button, input[type=submit], input[type=button], input[type=reset]):not(:disabled):hover {
+    background: var(--ui-hover); border-color: var(--ui-accent);
+  }
+}

@@ -1,0 +1,6 @@
+<a href="{{ item.href }}"
+  @if(!item.href.startsWith('/') && item.target === '_blank')
+    target="_blank" rel="noopener noreferrer"
+  @end
+  aria-current="{{ item.active === 'page' ? 'page' : 'false' }}"
+  data-active="{{ item.active || 'false' }}">{{ item.title }}</a>

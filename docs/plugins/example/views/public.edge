@@ -1,0 +1,9 @@
+<div class="example-plugin" data-context="{{ JSON.stringify(clientContext) }}">
+  <h2>Działająca wtyczka</h2>
+  @if(useContent)
+    <div data-example-content>{{{ html }}}</div>
+  @end
+  @include('views/partials/counter')
+  <button type="button" data-action="click">Przetestuj klienta</button>
+  <p data-local-count role="status">Kliknięcia w bieżącym widoku: 0</p>
+</div>

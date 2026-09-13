@@ -1,0 +1,72 @@
+<div class="panel-section-heading"><div><h2>{{ t('Site settings') }}</h2><p>{{ t('Name, home page, languages, branding, theme and footer for the entire site.') }}</p></div></div>
+<form data-site-settings data-language="{{ settings.language }}" data-default-language="{{ settings.defaultLanguage }}">
+  <input type="hidden" name="revision" value="{{ settings.revision }}">
+  @if(settings.language !== settings.defaultLanguage)
+    <input type="hidden" name="siteRevision" value="{{ settings.siteRevision }}">
+  @end
+  <div class="panel-savebar sticky-savebar settings-savebar">
+    <label class="panel-language-choice"><select data-settings-language aria-label="{{ t('Site settings language version') }}">
+      @each(code in settings.languages)
+        <option value="{{ code }}" {{ code === settings.language ? 'selected' : '' }}>{{ code.toUpperCase() }}</option>
+      @end
+    </select></label>
+    <span data-dirty-status>{{ t('No unsaved changes') }}</span><button class="primary" type="submit">{{ t('Save settings') }}</button>
+  </div>
+  @if(settings.language !== settings.defaultLanguage)
+    <p class="panel-note">{{ settings.inherited ? t('This language does not have its own site settings file yet. Translatable values currently fall back to the default language.') : t('Only visitor-facing text can differ by language. Disabled settings always come from site.yml.') }}</p>
+  @end
+
+  <details class="panel-section" open>
+    <summary>{{ t('Basic information') }}</summary>
+    <div class="panel-fields panel-settings-fields">
+      <label>{{ t('Site title') }}<input type="text" name="title" value="{{ settings.site.title }}" maxlength="200" required><small>{{ t('Used in the browser tab and as the default brand name.') }}</small></label>
+      <label>{{ t('Default language') }}<input type="text" name="language" value="{{ settings.site.language }}" maxlength="35" placeholder="en" required {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}><small>{{ t('Used when no supported language has been selected, for example en or en-US.') }}</small></label>
+    </div>
+    <label>{{ t('Available languages') }}<input type="text" name="languages" value="{{ settings.site.languages.join(', ') }}" maxlength="720" placeholder="pl, en, fr" required {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}><small>{{ t('Comma-separated language codes. The list must contain the default language and may contain up to 20 entries.') }}</small></label>
+    <label>{{ t('Home page') }}<select name="home" {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}>
+      <option value="/" {{ settings.site.home === '/' ? 'selected' : '' }}>{{ t('Built-in home page') }}</option>
+      @each(item in pages)
+        <option value="{{ item.href }}" {{ settings.site.home === item.href ? 'selected' : '' }}>{{ item.title }} — {{ item.href }}</option>
+      @end
+    </select><small>{{ t('The root address redirects to the selected published page.') }}</small></label>
+    <label>{{ t('Site description') }}<textarea name="description" rows="3" maxlength="500" placeholder="{{ t('A short description for search engines and link previews') }}">{{ settings.site.description || '' }}</textarea></label>
+  </details>
+
+  <details class="panel-section" open>
+    <summary>{{ t('Branding') }} <span>{{ t('Default theme header') }}</span></summary>
+    <div class="panel-fields panel-settings-fields">
+      <label>{{ t('Brand name') }}<input type="text" name="brandName" value="{{ settings.site.brandName || '' }}" maxlength="200" placeholder="{{ t('Default: site title') }}"></label>
+      <label>{{ t('Tagline') }}<input type="text" name="tagline" value="{{ settings.site.tagline || '' }}" maxlength="300" placeholder="{{ t('Short text displayed next to the logo') }}"></label>
+    </div>
+    <div class="panel-fields panel-settings-fields">
+      <label>{{ t('Logo') }}<input type="text" name="logo" value="{{ settings.site.logo || '' }}" maxlength="2000" placeholder="/media/logo.png or https://…" {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}><small>{{ t('A media path or a secure HTTPS address.') }}</small></label>
+      <label>{{ t('Site icon') }}<input type="text" name="favicon" value="{{ settings.site.favicon || '' }}" maxlength="2000" placeholder="/media/favicon.png or https://…" {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}><small>{{ t('Displayed in the browser tab.') }}</small></label>
+    </div>
+    <label class="panel-plain-toggle"><span><input type="checkbox" name="showBrandName" {{ settings.site.showBrandName !== false ? 'checked' : '' }} {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}> {{ t('Show the name next to the logo') }}</span><small>{{ t('Without a logo, the name remains visible regardless of this setting.') }}</small></label>
+  </details>
+
+  <details class="panel-section" open>
+    <summary>{{ t('Theme') }}</summary>
+    <label><span id="theme-label">{{ t('Selected theme') }}</span><select name="theme" aria-labelledby="theme-label" {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}>
+      @each(item in themes)
+        <option value="{{ item.id }}" {{ item.id === settings.site.theme ? 'selected' : '' }} {{ item.error ? 'disabled' : '' }}>{{ t(item.name) }} — {{ item.version }}</option>
+      @end
+    </select></label>
+    <div class="panel-cards panel-theme-cards">
+      @each(item in themes)
+        <section class="panel-card">
+          <h3>{{ t(item.name) }}</h3><p>{{ t(item.description) }}</p>
+          @if(item.error)
+            <p class="panel-plugin-error">{{ item.error }}</p>
+          @end
+        </section>
+      @end
+    </div>
+  </details>
+
+  <details class="panel-section" open>
+    <summary>{{ t('Footer') }} <span>{{ t('Default theme') }}</span></summary>
+    <label>{{ t('Format') }}<select name="footerFormat" {{ settings.language !== settings.defaultLanguage ? 'disabled' : '' }}><option value="markdown" {{ settings.site.footerFormat !== 'html' ? 'selected' : '' }}>Markdown</option><option value="html" {{ settings.site.footerFormat === 'html' ? 'selected' : '' }}>HTML</option></select></label>
+    <label>{{ t('Footer content') }}<textarea name="footer" rows="9" spellcheck="true" placeholder="{{ t('For example: © 2026 My brand') }}">{{ settings.site.footer || '' }}</textarea><small>{{ t('The default theme renders this footer. Custom themes decide whether and where to display it.') }}</small></label>
+  </details>
+</form>

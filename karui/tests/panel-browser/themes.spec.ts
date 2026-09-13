@@ -1,0 +1,32 @@
+import { test, expect } from '@playwright/test';
+
+test('panel saves site settings, selects a theme and restores the default', async ({ page }) => {
+  await page.goto('/panel');
+  await page.getByLabel('Login', { exact: true }).fill('owner');
+  await page.getByLabel('Hasło', { exact: true }).fill('browser-password-123');
+  await page.getByRole('button', { name: 'Zaloguj', exact: true }).click();
+  await page.getByRole('link', { name: 'Ustawienia strony', exact: true }).click();
+  await page.locator('[name="title"]').fill('Configured site');
+  await page.getByLabel('Opis strony', { exact: true }).fill('Opis zapisany w panelu');
+  await page.getByLabel('Nazwa marki', { exact: true }).fill('Configured brand');
+  await page.getByLabel('Hasło / tagline', { exact: true }).fill('Spójny nagłówek');
+  await page.locator('[name="logo"]').fill('/media/logo.png');
+  await page.locator('[name="footer"]').fill('**Stopka z panelu**');
+  await page.getByLabel('Wybrany motyw', { exact: true }).selectOption('example');
+  await page.getByRole('button', { name: 'Zapisz ustawienia' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'example');
+  await expect(page.locator('body')).toHaveAttribute('data-example-theme', 'ready');
+  await page.goto('/second');
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'example');
+  await expect(page.locator('body')).toHaveAttribute('data-example-theme', 'ready');
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', 'Opis zapisany w panelu');
+  await expect(page.locator('.site-brand')).toContainText('Configured brand');
+  await expect(page.locator('.site-logo')).toHaveAttribute('src', '/media/logo.png');
+  await expect(page.locator('.site-tagline')).toHaveText('Spójny nagłówek');
+  await expect(page.locator('.site-footer strong')).toHaveText('Stopka z panelu');
+  await page.goto('/panel/settings');
+  await page.getByLabel('Wybrany motyw', { exact: true }).selectOption('default');
+  await page.getByRole('button', { name: 'Zapisz ustawienia' }).click();
+  await expect(page.locator('body')).toHaveAttribute('data-theme', 'default');
+  await expect(page.locator('body')).not.toHaveAttribute('data-example-theme');
+});

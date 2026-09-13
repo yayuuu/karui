@@ -1,0 +1,34 @@
+<div class="karui-welcome">
+  <section class="welcome-hero" aria-labelledby="welcome-title">
+    <h1 id="welcome-title">{{ t('Welcome to') }} <span class="karui-wordmark">{{ site.title }}</span></h1>
+    <p class="welcome-slogan">{{ t('Bring speed back to the web.') }}</p>
+    <p class="welcome-copy">{{ t('Build sites that focus on content, respond without delay, and grow only when you truly need them to.') }}</p>
+    <div class="welcome-actions">
+      <a class="button welcome-primary" href="/panel">{{ t('Open the administration panel') }}</a>
+      <span>{{ t('Your first page is only a few clicks away.') }}</span>
+    </div>
+  </section>
+
+  <section class="welcome-overview" aria-label="{{ t('Key Karui features') }}">
+    <div class="welcome-overview-intro">
+      <h2>{{ t('Start with content') }}</h2>
+      <p>{{ t('Write pages in Markdown or HTML. Karui handles the rest without requiring a database.') }}</p>
+    </div>
+    <dl class="welcome-facts">
+      <div>
+        <dt>{{ t('Your design, your way') }}</dt>
+        <dd>{{ t('Choose a theme or create your own without forcing content into a template.') }}</dd>
+      </div>
+      <div>
+        <dt>{{ t('Features when you need them') }}</dt>
+        <dd>{{ t('Plugins extend selected pages while your files remain under your control.') }}</dd>
+      </div>
+      <div>
+        <dt>{{ t('Your own backend') }}</dt>
+        <dd>{{ t('Need user accounts, order handling, or other data? Build a plugin that connects to your chosen database and manages it independently.') }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <p class="welcome-note">{{ t('No unnecessary weight. No mandatory ecosystem. Just a fast website.') }}</p>
+</div>

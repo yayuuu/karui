@@ -1,0 +1,7 @@
+@component('components/layout', { site, page, submenu, back, print, home, styleUrl, footerHtml, assetVersion, t, languageLinks, clientTranslations })
+  @if(home)
+    @include('partials/home')
+  @else
+    @include('partials/page-content')
+  @end
+@end

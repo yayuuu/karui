@@ -1,0 +1,80 @@
+services:
+  karui:
+    build:
+      context: .
+      dockerfile: karui/Dockerfile
+    image: karui:local
+    init: true
+    restart: unless-stopped
+    environment:
+      CONTENT_DIR: /app/content
+      CONTENT_CACHE_DIR: /var/cache/karui
+      CONTENT_REFRESH_MS: 1000
+      PLUGIN_TIMEOUT_MS: ${PLUGIN_TIMEOUT_MS:-5000}
+      PLUGIN_WORKERS: ${PLUGIN_WORKERS:-8}
+      PLUGIN_MAX_WORKERS: ${PLUGIN_MAX_WORKERS:-16}
+      PLUGIN_WORKER_IDLE_MS: ${PLUGIN_WORKER_IDLE_MS:-10000}
+      PLUGIN_WORKER_OLD_GENERATION_MB: ${PLUGIN_WORKER_OLD_GENERATION_MB:-64}
+      PLUGIN_WORKER_YOUNG_GENERATION_MB: ${PLUGIN_WORKER_YOUNG_GENERATION_MB:-16}
+      PLUGIN_WORKER_STACK_MB: ${PLUGIN_WORKER_STACK_MB:-4}
+      PANEL_SECURE_COOKIE: ${PANEL_SECURE_COOKIE:-true}
+      PORT: ${PORT}
+    volumes:
+      - type: bind
+        source: ${CONTENT_PATH:-./content}
+        target: /app/content
+    read_only: true
+    tmpfs:
+      - /tmp:size=128m,mode=1777
+      - /var/cache/karui:size=64m,uid=1000,gid=1000,mode=0700
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1024m
+    pids_limit: 512
+    stop_grace_period: 10s
+    network_mode: host
+
+  plugins-install:
+    profiles: [tools]
+    image: karui:local
+    build:
+      context: .
+      dockerfile: karui/Dockerfile
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      CONTENT_DIR: /app/content
+      npm_config_cache: /tmp/npm-cache
+    volumes:
+      - "${CONTENT_PATH:-./content}:/app/content"
+    command: ["node", "scripts/install-plugins.ts"]
+
+  panel-init:
+    profiles: [tools]
+    image: karui:local
+    build:
+      context: .
+      dockerfile: karui/Dockerfile
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      CONTENT_DIR: /app/content
+    volumes:
+      - "${CONTENT_PATH:-./content}:/app/content"
+    stdin_open: true
+    tty: true
+    command: ["node", "scripts/panel-account.ts", "admin"]
+
+  create-template:
+    profiles: [tools]
+    image: karui:local
+    build:
+      context: .
+      dockerfile: karui/Dockerfile
+    user: "${LOCAL_UID:-1000}:${LOCAL_GID:-1000}"
+    environment:
+      CONTENT_DIR: /app/content
+    volumes:
+      - "${CONTENT_PATH:-./content}:/app/content"
+    stdin_open: true
+    tty: true
+    command: ["node", "scripts/create-template.ts"]

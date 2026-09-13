@@ -1,0 +1,29 @@
+title: "Karui documentation"
+home: /start
+language: en
+languages: [en, pl, fr]
+menu:
+  - title: Start
+    href: /start
+  - title: Plugins
+    href: /plugins
+    children:
+      - title: PluginContext and URLs
+        href: /plugins/context
+      - title: Views and content
+        href: /plugins/views
+      - title: Client and interactions
+        href: /plugins/client
+      - title: Administration
+        href: /plugins/admin
+      - title: Files and runtime
+        href: /plugins/runtime
+      - title: Example
+        href: /plugins/example
+  - title: Themes
+    href: /themes
+  - title: Testing and limits
+    href: /testing
+  - title: Administration panel
+    href: http://localhost:3002/panel
+    target: _self

@@ -1,0 +1,10 @@
+<div class="panel-section-heading"><div><h2>{{ t('Pages and galleries') }}</h2><p>{{ t('Choose a page to edit its content, subpages and photos.') }}</p></div><a class="primary button" href="/panel/new">＋ {{ t('Add page') }}</a></div>
+<label class="panel-search">{{ t('Search pages') }}<input type="search" placeholder="{{ t('Title or address…') }}" data-page-filter></label>
+<div class="panel-page-list">
+  @each(item in pages)
+    <a class="panel-page-row" href="/panel/page?path={{ encodeURIComponent(item.href) }}" data-page-row>
+      <span><strong>{{ item.title }}</strong><small>{{ item.href }}</small></span>
+      <span class="panel-row-meta"><span class="panel-badge">{{ item.plugin ? t('Plugin: {name}', { name: item.plugin }) : item.gallery.length ? t('Gallery') : t('Page') }}</span><span>{{ t('Edit') }} →</span></span>
+    </a>
+  @end
+</div>

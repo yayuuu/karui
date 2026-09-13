@@ -1,0 +1,41 @@
+<div class="panel-section-heading">
+  <div><h2>{{ t('Plugins') }}</h2><p>{{ t('Installed extensions and the pages that use them.') }}</p></div>
+</div>
+@if(!plugins.length)
+  <section class="panel-section"><p>{{ t('No plugins were found.') }}</p></section>
+@else
+  <div class="panel-plugin-list">
+    @each(item in plugins)
+      <details class="panel-section panel-plugin">
+        <summary>
+          <span class="panel-plugin-name">{{ item.name }}</span>
+          <span class="panel-plugin-summary">
+            <span class="panel-badge">{{ t('version {version}', { version: item.version }) }}</span>
+            <code>concurrency: {{ item.concurrent ? 'true' : 'false' }}</code>
+          </span>
+        </summary>
+        @if(item.error)
+          <p class="panel-plugin-error">{{ item.error }}</p>
+        @else
+          <dl class="panel-plugin-details">
+            <div><dt>{{ t('Administration panel') }}</dt><dd>{{ item.admin ? t('available') : t('none') }}</dd></div>
+            <div><dt>{{ t('Assigned pages') }}</dt><dd>{{ item.usedBy.length }}</dd></div>
+          </dl>
+        @end
+        <h3>{{ t('Pages using this plugin') }}</h3>
+        @if(item.usedBy.length)
+          <div class="panel-page-list panel-plugin-pages">
+            @each(page in item.usedBy)
+              <a class="panel-page-row" href="/panel/page?path={{ encodeURIComponent(page.href) }}">
+                <span><strong>{{ page.title }}</strong><small>{{ page.href }}</small></span>
+                <span class="panel-row-meta"><span class="panel-badge">{{ page.published ? t('Published') : t('Hidden') }}</span><span>{{ t('Edit') }} →</span></span>
+              </a>
+            @end
+          </div>
+        @else
+          <p class="panel-note">{{ t('This plugin is not assigned to any page.') }}</p>
+        @end
+      </details>
+    @end
+  </div>
+@end

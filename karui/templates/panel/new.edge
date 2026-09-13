@@ -1,0 +1,11 @@
+<div class="panel-section-heading"><div><h2>{{ t('New page') }}</h2><p>{{ t('Create a top-level page or a subpage.') }}</p></div><a href="/panel/pages">← {{ t('Back') }}</a></div>
+<form class="panel-form" data-create-page>
+  <label>{{ t('Page title') }}<input type="text" name="title" required maxlength="300" data-title></label>
+  <label>{{ t('Address (slug)') }}<input type="text" name="slug" required pattern="[a-z0-9]+(-[a-z0-9]+)*" maxlength="80" data-slug><small>{{ t('Lowercase letters, digits and hyphens only.') }}</small></label>
+  <label>{{ t('Parent page') }}<select name="parent"><option value="/">{{ t('None — top-level page') }}</option>
+    @each(item in pages)
+      <option value="{{ item.href }}" {{ item.href === parent ? 'selected' : '' }}>{{ item.title }} ({{ item.href }})</option>
+    @end
+  </select></label>
+  <button class="primary" type="submit">{{ t('Create and edit') }}</button>
+</form>

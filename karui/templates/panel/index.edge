@@ -1,0 +1,23 @@
+@component('components/layout', { site, page, submenu, back, print, home, styleUrl, footerHtml, assetVersion, t, languageLinks, clientTranslations })
+  <div class="panel" data-panel data-csrf="{{ csrf }}" data-translations="{{ JSON.stringify(clientTranslations) }}">
+    <header class="panel-header">
+      <h1 class="page-heading">{{ t('Administration panel') }}</h1>
+      @if(user)
+        <form method="post" action="/panel/logout" class="panel-session"><span>{{ user.login }}</span><input type="hidden" name="_csrf" value="{{ csrf }}"><button class="quiet" type="submit">{{ t('Log out') }}</button></form>
+      @end
+    </header>
+    @if(user)
+      <nav class="panel-tabs" aria-label="{{ t('Panel navigation') }}">
+        <a href="/panel" aria-current="{{ screen === 'home' ? 'page' : 'false' }}">{{ t('Overview') }}</a>
+        <a href="/panel/pages" aria-current="{{ ['pages', 'new', 'edit'].includes(screen) ? 'page' : 'false' }}">{{ t('Pages and galleries') }}</a>
+        <a href="/panel/menu" aria-current="{{ screen === 'menu' ? 'page' : 'false' }}">Menu</a>
+        <a href="/panel/accounts" aria-current="{{ screen === 'accounts' ? 'page' : 'false' }}">{{ user.role === 'owner' ? t('Accounts') : t('My account') }}</a>
+        <a href="/panel/plugins" aria-current="{{ ['plugins', 'plugin'].includes(screen) ? 'page' : 'false' }}">{{ t('Plugins') }}</a>
+        <a href="/panel/settings" aria-current="{{ screen === 'settings' ? 'page' : 'false' }}">{{ t('Site settings') }}</a>
+      </nav>
+    @end
+    <p class="panel-status {{ error ? 'error' : '' }}" data-panel-status role="status" {{ error ? '' : 'hidden' }}>{{ error }}</p>
+    @include(screenTemplate)
+  </div>
+  <script type="module" src="/assets/panel.js?v={{ assetVersion }}"></script>
+@end

@@ -1,0 +1,35 @@
+@if(!notFound)
+  <h1 class="pagetitle page-heading"><span class="page-title-text">{{ page.title }}</span>
+    @if(page.showPrint || page.showPdf)
+      <span class="page-title-actions">
+        @if(page.showPrint)
+          <a id="print" href="{{ page.href }}?m=print" target="_blank" rel="noopener" title="{{ t('Print') }}">{{ t('Print') }}</a>
+        @end
+        @if(page.showPdf)
+          <a id="pdf" href="{{ page.href }}?m=pdf" target="_blank" rel="noopener" title="{{ t('Save as PDF') }}">PDF</a>
+        @end
+      </span>
+    @end
+  </h1>
+@else
+  <h1 class="pagetitle page-heading">{{ page.title }}</h1>
+@end
+@if(page.plugin && page.pluginPlacement === 'before')
+  @include('partials/widget')
+@end
+@if(!page.plugin || page.pluginPlacement !== 'content')
+  {{{ page.html }}}
+@end
+@if(page.gallery && page.gallery.length)
+  @include('gallery')
+@end
+@if(page.showSubpages !== false && children.length)
+  <ul class="pagemenu">
+    @each((child, index) in children)
+      <li class="{{ index % 2 ? 'odd' : '' }}"><div class="pagenr">{{ index + 1 }}</div><a href="{{ child.href }}">{{ child.title }}</a></li>
+    @end
+  </ul>
+@end
+@if(page.plugin && page.pluginPlacement !== 'before')
+  @include('partials/widget')
+@end

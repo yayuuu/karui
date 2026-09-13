@@ -1,0 +1,31 @@
+services:
+  docs:
+    build:
+      context: .
+      dockerfile: karui/Dockerfile
+    image: karui:local
+    init: true
+    environment:
+      CONTENT_DIR: /app/content
+      CONTENT_CACHE_DIR: /var/cache/karui
+      PORT: 3002
+      PLUGIN_WORKERS: 1
+      PLUGIN_MAX_WORKERS: 4
+      PLUGIN_WORKER_OLD_GENERATION_MB: ${PLUGIN_WORKER_OLD_GENERATION_MB:-64}
+      PLUGIN_WORKER_YOUNG_GENERATION_MB: ${PLUGIN_WORKER_YOUNG_GENERATION_MB:-16}
+      PLUGIN_WORKER_STACK_MB: ${PLUGIN_WORKER_STACK_MB:-4}
+      PANEL_SECURE_COOKIE: "false"
+    ports:
+      - "127.0.0.1:${DOCS_PORT:-3002}:3002"
+    volumes:
+      - ./docs:/app/content:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3002/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+      - /var/cache/karui:size=64m,uid=1000,gid=1000,mode=0700
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    pids_limit: 128

@@ -1,0 +1,34 @@
+# Deny by default: content is mounted at runtime, never sent to the builder.
+**
+
+!.dockerignore
+!package.json
+!package-lock.json
+!content/
+!content/.keep
+!karui/
+!karui/Dockerfile
+!karui/tsconfig.json
+!karui/tsconfig.build.json
+
+# Application source and runtime templates (no docs, tests or local artifacts).
+!karui/src/**
+!karui/templates/**
+!karui/lang/**
+
+# All engine bundles are generated inside the build. Theme data stays mounted.
+
+# Only maintenance commands copied by Dockerfile.
+!karui/scripts/install-plugins.ts
+!karui/scripts/panel-account.ts
+!karui/scripts/create-template.ts
+
+# Keep local metadata and editor artifacts out even inside allowed source trees.
+/artifacts/
+**/node_modules
+**/.git
+**/.env*
+**/*.md
+**/*.map
+**/*.bak
+**/*~

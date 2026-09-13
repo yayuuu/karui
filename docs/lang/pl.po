@@ -1,0 +1,50 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Karui documentation\n"
+"Language: pl\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgctxt "karui-menu"
+msgid "Start"
+msgstr "Start"
+
+msgctxt "karui-menu"
+msgid "Plugins"
+msgstr "Wtyczki"
+
+msgctxt "karui-menu"
+msgid "PluginContext and URLs"
+msgstr "PluginContext i adresy URL"
+
+msgctxt "karui-menu"
+msgid "Views and content"
+msgstr "Widoki i treść"
+
+msgctxt "karui-menu"
+msgid "Client and interactions"
+msgstr "Klient i interakcje"
+
+msgctxt "karui-menu"
+msgid "Administration"
+msgstr "Administracja"
+
+msgctxt "karui-menu"
+msgid "Files and runtime"
+msgstr "Pliki i uruchamianie"
+
+msgctxt "karui-menu"
+msgid "Example"
+msgstr "Przykład"
+
+msgctxt "karui-menu"
+msgid "Themes"
+msgstr "Motywy"
+
+msgctxt "karui-menu"
+msgid "Testing and limits"
+msgstr "Testy i ograniczenia"
+
+msgctxt "karui-menu"
+msgid "Administration panel"
+msgstr "Panel Administracyjny"

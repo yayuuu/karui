@@ -1,0 +1,2 @@
+.example-plugin { border: 1px solid var(--page-divider); border-radius: 10px; padding: 18px; }
+.example-plugin button { padding: 8px 12px; color: var(--page-text); background: var(--ui-control-bg); border: 1px solid var(--ui-control-border); border-radius: 6px; cursor: pointer; }

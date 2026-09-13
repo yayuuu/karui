@@ -1,0 +1,22 @@
+<section class="panel-login">
+  <span class="panel-badge">{{ t('ADMINISTRATOR AREA') }}</span>
+  <h2>{{ t('Welcome back') }}</h2>
+  <p>{{ t('Sign in to edit the site.') }}</p>
+  @if(configured)
+    <form method="post" action="/panel/login">
+      <input type="hidden" name="_csrf" value="{{ csrf }}">
+      <label>{{ t('Login') }}<input type="text" name="login" autocomplete="username" required maxlength="48" autofocus></label>
+      <label>{{ t('Password') }}<input type="password" name="password" autocomplete="current-password" required maxlength="1024"></label>
+      <button class="primary" type="submit">{{ t('Sign in') }}</button>
+    </form>
+  @else
+    <div class="panel-status panel-first-run">
+      <strong>{{ t('The panel does not have an administrator account yet.') }}</strong>
+      <p>{{ t('If you run the site with Docker Compose, run this in the directory containing docker-compose.yml:') }}</p>
+      <pre><code>docker compose run --rm panel-init</code></pre>
+      <p>{{ t('If you run the engine without Docker, build it and run:') }}</p>
+      <pre><code>npm run panel:init -- admin</code></pre>
+      <p>{{ t('The command will ask for a password for the admin account. Refresh this page after creating it.') }}</p>
+    </div>
+  @end
+</section>

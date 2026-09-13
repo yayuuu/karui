@@ -1,0 +1,8 @@
+<div class="panel-section-heading">
+  <div><h2>{{ edit.page.title }} — {{ pluginName }}</h2><p>{{ t('Plugin administration') }} · {{ edit.page.href }}</p></div>
+  <a class="button" href="/panel/page?path={{ encodeURIComponent(edit.page.href) }}&language={{ edit.language }}">{{ t('Return to page editing') }}</a>
+</div>
+@if(pluginStyleUrl)
+  <link rel="stylesheet" href="{{ pluginStyleUrl }}">
+@end
+@include('partials/widget')

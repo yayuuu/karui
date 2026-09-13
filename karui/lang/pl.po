@@ -1,0 +1,1079 @@
+msgid ""
+msgstr ""
+"Language: pl\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "Skip to content"
+msgstr "Przejdź do treści"
+
+msgid "Main menu"
+msgstr "Menu główne"
+
+msgid "Language"
+msgstr "Język"
+
+msgid "Change language"
+msgstr "Zmień język"
+
+msgid "Back"
+msgstr "Powrót"
+
+msgid "Back to top"
+msgstr "Powrót do góry"
+
+msgid "Home page"
+msgstr "Strona główna"
+
+msgid "Print"
+msgstr "Drukuj"
+
+msgid "Save as PDF"
+msgstr "Zapisz jako PDF"
+
+msgid "Photo preview"
+msgstr "Podgląd zdjęcia"
+
+msgid "Photo {number}"
+msgstr "Zdjęcie {number}"
+
+msgid "Download"
+msgstr "Pobierz"
+
+msgid "Close"
+msgstr "Zamknij"
+
+msgid "Previous"
+msgstr "Poprzednie"
+
+msgid "Next"
+msgstr "Następne"
+
+msgid "Welcome to"
+msgstr "Witamy w"
+
+msgid "Bring speed back to the web."
+msgstr "Przywróć sieci szybkość."
+
+msgid "Build sites that focus on content, respond without delay, and grow only when you truly need them to."
+msgstr "Twórz strony skupione na treści, reagujące bez zwłoki i rosnące dopiero wtedy, gdy naprawdę tego potrzebujesz."
+
+msgid "Open the administration panel"
+msgstr "Otwórz panel administracyjny"
+
+msgid "Your first page is only a few clicks away."
+msgstr "Twoja pierwsza strona jest tylko kilka kliknięć stąd."
+
+msgid "Key Karui features"
+msgstr "Najważniejsze możliwości Karui"
+
+msgid "Start with content"
+msgstr "Zacznij od treści"
+
+msgid "Write pages in Markdown or HTML. Karui handles the rest without requiring a database."
+msgstr "Pisz strony w Markdownie lub HTML-u. Karui zajmie się resztą bez wymagania bazy danych."
+
+msgid "Your design, your way"
+msgstr "Twój wygląd, Twoje zasady"
+
+msgid "Choose a theme or create your own without forcing content into a template."
+msgstr "Wybierz motyw albo przygotuj własny, bez wciskania treści w narzucony szablon."
+
+msgid "Features when you need them"
+msgstr "Funkcje, kiedy ich potrzebujesz"
+
+msgid "Plugins extend selected pages while your files remain under your control."
+msgstr "Wtyczki rozszerzają wybrane strony, a pliki nadal pozostają pod Twoją kontrolą."
+
+msgid "Your own backend"
+msgstr "Twój własny backend"
+
+msgid "Need user accounts, order handling, or other data? Build a plugin that connects to your chosen database and manages it independently."
+msgstr "Potrzebujesz kont użytkowników, obsługi zamówień lub innych danych? Zbuduj wtyczkę, która połączy się z wybraną bazą i samodzielnie nią zarządzi."
+
+msgid "No unnecessary weight. No mandatory ecosystem. Just a fast website."
+msgstr "Bez zbędnego ciężaru. Bez obowiązkowego ekosystemu. Po prostu szybka strona."
+
+msgid "Administration panel"
+msgstr "Panel Administracyjny"
+
+msgid "Panel navigation"
+msgstr "Nawigacja panelu"
+
+msgid "Overview"
+msgstr "Przegląd"
+
+msgid "Pages and galleries"
+msgstr "Strony i galerie"
+
+msgid "Accounts"
+msgstr "Konta"
+
+msgid "My account"
+msgstr "Moje konto"
+
+msgid "Plugins"
+msgstr "Wtyczki"
+
+msgid "Site settings"
+msgstr "Ustawienia strony"
+
+msgid "Log out"
+msgstr "Wyloguj"
+
+msgid "ADMINISTRATOR AREA"
+msgstr "STREFA ADMINISTRATORA"
+
+msgid "Welcome back"
+msgstr "Dobrze Cię widzieć"
+
+msgid "Sign in to edit the site."
+msgstr "Zaloguj się, aby edytować stronę."
+
+msgid "Login"
+msgstr "Login"
+
+msgid "Password"
+msgstr "Hasło"
+
+msgid "Sign in"
+msgstr "Zaloguj"
+
+msgid "The panel does not have an administrator account yet."
+msgstr "Panel nie ma jeszcze konta administratora."
+
+msgid "If you run the site with Docker Compose, run this in the directory containing docker-compose.yml:"
+msgstr "Jeśli uruchamiasz stronę przez Docker Compose, w katalogu zawierającym docker-compose.yml wykonaj:"
+
+msgid "If you run the engine without Docker, build it and run:"
+msgstr "Jeśli uruchamiasz silnik bez Dockera, po jego zbudowaniu wykonaj:"
+
+msgid "The command will ask for a password for the admin account. Refresh this page after creating it."
+msgstr "Polecenie poprosi o hasło dla konta admin. Po jego utworzeniu odśwież tę stronę."
+
+msgid "Your site, under control"
+msgstr "Twoja strona, pod kontrolą"
+
+msgid "Content, photos and navigation in one place. Saved changes are visible immediately."
+msgstr "Treści, zdjęcia i nawigacja w jednym miejscu. Zapisane zmiany są widoczne od razu."
+
+msgid "Pages and subpages"
+msgstr "Strony i podstrony"
+
+msgid "Edit content, add subpages and manage galleries."
+msgstr "Edytuj treść, dodawaj podstrony i zarządzaj galeriami."
+
+msgid "Menu tree"
+msgstr "Drzewo menu"
+
+msgid "Administrator accounts"
+msgstr "Konta administratorów"
+
+msgid "Manage panel access and passwords."
+msgstr "Zarządzaj dostępem i hasłami do panelu."
+
+msgid "Configure the title, home page, branding, theme and footer."
+msgstr "Ustaw tytuł, stronę startową, branding, motyw i stopkę."
+
+msgid "{count} gallery photos"
+msgstr "{count} zdjęć w galeriach"
+
+msgid "Data stored in the content directory"
+msgstr "Dane przechowywane w katalogu content"
+
+msgid "No database required"
+msgstr "Bez wymaganej bazy danych"
+
+msgid "Administrator"
+msgstr "Administrator"
+
+msgid "Owner"
+msgstr "Administrator główny"
+
+msgid "New password"
+msgstr "Nowe hasło"
+
+msgid "Confirm password"
+msgstr "Potwierdź hasło"
+
+msgid "Change password"
+msgstr "Zmień hasło"
+
+msgid "Delete account {login}"
+msgstr "Usuń konto {login}"
+
+msgid "Create account"
+msgstr "Utwórz konto"
+
+msgid "New administrator"
+msgstr "Nowy administrator"
+
+msgid "Changing a password ends all active sessions for that account."
+msgstr "Zmiana hasła kończy aktywne sesje danego konta."
+
+msgid "No unsaved changes"
+msgstr "Brak niezapisanych zmian"
+
+msgid "Save settings"
+msgstr "Zapisz ustawienia"
+
+msgid "Basic information"
+msgstr "Podstawowe informacje"
+
+msgid "Site title"
+msgstr "Tytuł strony"
+
+msgid "Default language"
+msgstr "Język domyślny"
+
+msgid "Available languages"
+msgstr "Dostępne języki"
+
+msgid "Built-in home page"
+msgstr "Wbudowana strona główna"
+
+msgid "Site description"
+msgstr "Opis strony"
+
+msgid "Branding"
+msgstr "Branding"
+
+msgid "Brand name"
+msgstr "Nazwa marki"
+
+msgid "Tagline"
+msgstr "Hasło / tagline"
+
+msgid "Site icon"
+msgstr "Ikona strony"
+
+msgid "Theme"
+msgstr "Motyw"
+
+msgid "Selected theme"
+msgstr "Wybrany motyw"
+
+msgid "Default"
+msgstr "Domyślny"
+
+msgid "A simple, universal site theme."
+msgstr "Prosty, uniwersalny wygląd strony."
+
+msgid "Footer"
+msgstr "Stopka"
+
+msgid "Footer content"
+msgstr "Treść stopki"
+
+msgid "Open page"
+msgstr "Otwórz stronę"
+
+msgid "Language version"
+msgstr "Wersja językowa"
+
+msgid "Page language version"
+msgstr "Wersja językowa strony"
+
+msgid "Save changes"
+msgstr "Zapisz zmiany"
+
+msgid "Edit page"
+msgstr "Edycja strony"
+
+msgid "Page title"
+msgstr "Tytuł strony"
+
+msgid "Order"
+msgstr "Kolejność"
+
+msgid "Keywords"
+msgstr "Słowa kluczowe"
+
+msgid "Page availability"
+msgstr "Dostępność strony"
+
+msgid "Page published"
+msgstr "Strona opublikowana"
+
+msgid "Page header buttons"
+msgstr "Przyciski w nagłówku strony"
+
+msgid "Dynamic plugin"
+msgstr "Wtyczka dynamiczna"
+
+msgid "Plugin administration"
+msgstr "Administracja wtyczki"
+
+msgid "Content format"
+msgstr "Format treści"
+
+msgid "Editor mode"
+msgstr "Tryb edytora"
+
+msgid "Visual editor"
+msgstr "Edytor wizualny"
+
+msgid "Source"
+msgstr "Źródło"
+
+msgid "Preview"
+msgstr "Podgląd"
+
+msgid "Page content"
+msgstr "Treść strony"
+
+msgid "Subpages"
+msgstr "Podstrony"
+
+msgid "List visibility"
+msgstr "Widoczność listy"
+
+msgid "Show subpage list"
+msgstr "Pokaż listę podstron"
+
+msgid "Order saved"
+msgstr "Kolejność zapisana"
+
+msgid "Save order"
+msgstr "Zapisz kolejność"
+
+msgid "Add subpage"
+msgstr "Dodaj podstronę"
+
+msgid "Gallery"
+msgstr "Galeria"
+
+msgid "Gallery visibility"
+msgstr "Widoczność galerii"
+
+msgid "Show the full gallery"
+msgstr "Pokaż pełną galerię"
+
+msgid "Show photos not used in content"
+msgstr "Pokaż zdjęcia nieużyte w treści"
+
+msgid "Hide gallery"
+msgstr "Ukryj galerię"
+
+msgid "{count} photos"
+msgstr "{count} zdjęć"
+
+msgid "Delete page"
+msgstr "Usuń stronę"
+
+msgid "Delete this page"
+msgstr "Usuń tę stronę"
+
+msgid "New page"
+msgstr "Nowa strona"
+
+msgid "Address (slug)"
+msgstr "Adres (slug)"
+
+msgid "Parent page"
+msgstr "Strona nadrzędna"
+
+msgid "None — top-level page"
+msgstr "Brak — strona głównego poziomu"
+
+msgid "Create and edit"
+msgstr "Utwórz i przejdź do edycji"
+
+msgid "Add page"
+msgstr "Dodaj stronę"
+
+msgid "Search pages"
+msgstr "Szukaj strony"
+
+msgid "Title or address…"
+msgstr "Tytuł lub adres…"
+
+msgid "Edit"
+msgstr "Edycja"
+
+msgid "Page"
+msgstr "Strona"
+
+msgid "Plugin: {name}"
+msgstr "Wtyczka: {name}"
+
+msgid "No plugins were found."
+msgstr "Nie znaleziono żadnych wtyczek."
+
+msgid "Assigned pages"
+msgstr "Przypisane strony"
+
+msgid "Pages using this plugin"
+msgstr "Strony korzystające z wtyczki"
+
+msgid "Published"
+msgstr "Opublikowana"
+
+msgid "Hidden"
+msgstr "Ukryta"
+
+msgid "Karui documentation"
+msgstr "Dokumentacja Karui"
+
+msgid "PluginContext and URLs"
+msgstr "PluginContext i adresy URL"
+
+msgid "Views and content"
+msgstr "Widoki i treść"
+
+msgid "Client and interactions"
+msgstr "Klient i interakcje"
+
+msgid "Administration"
+msgstr "Administracja"
+
+msgid "Files and runtime"
+msgstr "Pliki i uruchamianie"
+
+msgid "Example"
+msgstr "Przykład"
+
+msgid "Themes"
+msgstr "Motywy"
+
+msgid "Testing and limits"
+msgstr "Testy i ograniczenia"
+
+msgid "A gallery can be added to any page. Removing a photo removes it from this gallery, not from other places on the site."
+msgstr "Galerię można dodać do dowolnej strony. Usunięcie zdjęcia usuwa je z tej galerii, ale nie z innych miejsc witryny."
+
+msgid "A media path or a secure HTTPS address."
+msgstr "Ścieżka do multimediów albo bezpieczny adres HTTPS."
+
+msgid "A short description for search engines and link previews"
+msgstr "Krótki opis dla wyszukiwarek i podglądów odnośników"
+
+msgid "Above static content"
+msgstr "Nad treścią statyczną"
+
+msgid "Below static content"
+msgstr "Pod treścią statyczną"
+
+msgid "Pass content to the plugin"
+msgstr "Przekaż treść do wtyczki"
+
+msgid "Add menu item"
+msgstr "Dodaj element menu"
+
+msgid "Add submenu item"
+msgstr "Dodaj element podmenu"
+
+msgid "Alignment"
+msgstr "Wyrównanie"
+
+msgid "Back to content"
+msgstr "Wróć do treści"
+
+msgid "Bold"
+msgstr "Pogrubienie"
+
+msgid "Bulleted list"
+msgstr "Lista punktowana"
+
+msgid "Center"
+msgstr "Do środka"
+
+msgid "Changes could not be saved."
+msgstr "Nie udało się zapisać zmian."
+
+msgid "Choose a page to edit its content, subpages and photos."
+msgstr "Wybierz stronę, aby edytować jej treść, podstrony i zdjęcia."
+
+msgid "Comma-separated language codes. The list must contain the default language and may contain up to 20 entries."
+msgstr "Kody języków rozdzielone przecinkami. Lista musi zawierać język domyślny i może mieć najwyżej 20 pozycji."
+
+msgid "Content preview"
+msgstr "Podgląd treści"
+
+msgid "Create a top-level page or a subpage."
+msgstr "Utwórz stronę głównego poziomu albo podstronę."
+
+msgid "Creating thumbnails…"
+msgstr "Tworzenie miniaturek…"
+
+msgid "Custom HTML blocks are preserved and marked in the editor. Edit them in source mode."
+msgstr "Własne bloki HTML są zachowywane i oznaczane w edytorze. Edytuj je w trybie źródłowym."
+
+msgid "Custom external link"
+msgstr "Własny link zewnętrzny"
+
+msgid "Default theme"
+msgstr "Motyw domyślny"
+
+msgid "Default theme header"
+msgstr "Nagłówek motywu domyślnego"
+
+msgid "Default: site title"
+msgstr "Domyślnie: tytuł strony"
+
+msgid "Delete"
+msgstr "Usuń"
+
+msgid "Delete account {login}?"
+msgstr "Usunąć konto {login}?"
+
+msgid "Delete menu item"
+msgstr "Usuń element menu"
+
+msgid "Delete this menu item and its submenu? The change will be published after saving."
+msgstr "Usunąć ten element menu razem z podmenu? Zmiana zostanie opublikowana po zapisaniu."
+
+msgid "Delete this page? A copy of its content will be stored in the private trash."
+msgstr "Usunąć tę stronę? Kopia jej treści zostanie zapisana w prywatnym koszu."
+
+msgid "Disabling this hides the page and its children from navigation and makes their addresses return 404. Panel editing remains available."
+msgstr "Wyłączenie ukrywa stronę i jej podstrony w nawigacji, a ich adresy zwracają błąd 404. Nadal można je edytować w panelu."
+
+msgid "Displayed in the browser tab."
+msgstr "Wyświetlany na karcie przeglądarki."
+
+msgid "Done"
+msgstr "Gotowe"
+
+msgid "Drag items to change order and nesting. External links can open in the same or a new tab. Changes are published only after saving."
+msgstr "Przeciągaj elementy, aby zmieniać ich kolejność i zagnieżdżenie. Linki zewnętrzne mogą otwierać się w tej samej albo nowej karcie. Zmiany są publikowane dopiero po zapisaniu."
+
+msgid "Drag menu item"
+msgstr "Przeciągnij element menu"
+
+msgid "Drag menu items to change their order and level."
+msgstr "Przeciągaj elementy menu, aby zmieniać ich kolejność i poziom."
+
+msgid "Drag the handle to reorder an item or move it into a submenu."
+msgstr "Przeciągnij uchwyt, aby zmienić kolejność elementu albo przenieść go do podmenu."
+
+msgid "Every menu item must have a name."
+msgstr "Każdy element menu musi mieć nazwę."
+
+msgid "External address"
+msgstr "Adres zewnętrzny"
+
+msgid "Font size"
+msgstr "Rozmiar czcionki"
+
+msgid "For example: © 2026 My brand"
+msgstr "Na przykład: © 2026 Moja marka"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Heading 1"
+msgstr "Nagłówek 1"
+
+msgid "Heading 2"
+msgstr "Nagłówek 2"
+
+msgid "Heading 3"
+msgstr "Nagłówek 3"
+
+msgid "Horizontal rule"
+msgstr "Linia pozioma"
+
+msgid "Image address (/media/… or https://…)"
+msgstr "Adres obrazu (/media/… albo https://…)"
+
+msgid "In a new tab"
+msgstr "W nowej karcie"
+
+msgid "In the same tab"
+msgstr "W tej samej karcie"
+
+msgid "Insert image from address"
+msgstr "Wstaw obraz z adresu"
+
+msgid "Insert into content"
+msgstr "Wstaw do treści"
+
+msgid "Insert link"
+msgstr "Wstaw odnośnik"
+
+msgid "Insert table"
+msgstr "Wstaw tabelę"
+
+msgid "Add table row"
+msgstr "Dodaj wiersz tabeli"
+
+msgid "Add table column"
+msgstr "Dodaj kolumnę tabeli"
+
+msgid "Delete table"
+msgstr "Usuń tabelę"
+
+msgid "Installed extensions and the pages that use them."
+msgstr "Zainstalowane wtyczki i strony, które z nich korzystają."
+
+msgid "Italic"
+msgstr "Kursywa"
+
+msgid "Justify"
+msgstr "Wyjustuj"
+
+msgid "Left"
+msgstr "Do lewej"
+
+msgid "Right"
+msgstr "Do prawej"
+
+msgid "Link address (https://… or /subpage)"
+msgstr "Adres odnośnika (https://… albo /podstrona)"
+
+msgid "Loading page…"
+msgstr "Wczytywanie strony…"
+
+msgid "Logo"
+msgstr "Logo"
+
+msgid "Lowercase letters, digits and hyphens only."
+msgstr "Tylko małe litery, cyfry i myślniki."
+
+msgid "MAIN MENU"
+msgstr "MENU GŁÓWNE"
+
+msgid "Markdown is the default for new pages. HTML provides full formatting. Format changes are saved together with the page."
+msgstr "Markdown jest domyślnym formatem nowych stron. HTML zapewnia pełną swobodę formatowania. Zmiana formatu jest zapisywana razem ze stroną."
+
+msgid "Menu item name"
+msgstr "Nazwa elementu menu"
+
+msgid "Menu items"
+msgstr "Elementy menu"
+
+msgid "Mobile navigation"
+msgstr "Nawigacja mobilna"
+
+msgid "Move photo earlier"
+msgstr "Przesuń zdjęcie wcześniej"
+
+msgid "Move photo later"
+msgstr "Przesuń zdjęcie później"
+
+msgid "Name, home page, languages, branding, theme and footer for the entire site."
+msgstr "Nazwa, strona startowa, języki, branding, motyw i stopka całej witryny."
+
+msgid "Navigation"
+msgstr "Nawigacja"
+
+msgid "Nested items create submenus"
+msgstr "Zagnieżdżone elementy tworzą podmenu"
+
+msgid "Network error while uploading the photo."
+msgstr "Błąd sieci podczas wysyłania zdjęcia."
+
+msgid "None — content and gallery handled by the engine"
+msgstr "Brak — treść i galerię obsługuje silnik"
+
+msgid "Numbered list"
+msgstr "Lista numerowana"
+
+msgid "Open link"
+msgstr "Otwórz link"
+
+msgid "Open the full page"
+msgstr "Otwórz pełną stronę"
+
+msgid "Paragraph"
+msgstr "Akapit"
+
+msgid "Paragraph style"
+msgstr "Styl akapitu"
+
+msgid "Photo description"
+msgstr "Opis zdjęcia"
+
+msgid "Photo descriptions"
+msgstr "Opisy zdjęć"
+
+msgid "Photo files"
+msgstr "Pliki zdjęć"
+
+msgid "Photo {current} of {total}"
+msgstr "Zdjęcie {current} z {total}"
+
+msgid "Plugin placement relative to content"
+msgstr "Położenie wtyczki względem treści"
+
+msgid "Queued"
+msgstr "W kolejce"
+
+msgid "Quote"
+msgstr "Cytat"
+
+msgid "Redo"
+msgstr "Ponów"
+
+msgid "Remove the photo from this gallery? The file will be retained."
+msgstr "Usunąć zdjęcie z tej galerii? Plik zostanie zachowany."
+
+msgid "Retry"
+msgstr "Ponów"
+
+msgid "Return to page editing"
+msgstr "Wróć do edycji strony"
+
+msgid "Save description"
+msgstr "Zapisz opis"
+
+msgid "Save menu"
+msgstr "Zapisz menu"
+
+msgid "Short text displayed next to the logo"
+msgstr "Krótki tekst wyświetlany obok logo"
+
+msgid "Show PDF button"
+msgstr "Pokaż przycisk PDF"
+
+msgid "Show Print button"
+msgstr "Pokaż przycisk Drukuj"
+
+msgid "Show the name next to the logo"
+msgstr "Pokaż nazwę obok logo"
+
+msgid "Site navigation"
+msgstr "Nawigacja strony"
+
+msgid "Strikethrough"
+msgstr "Przekreślenie"
+
+msgid "Submenu"
+msgstr "Podmenu"
+
+msgid "Switch language and discard unsaved changes?"
+msgstr "Zmienić język i odrzucić niezapisane zmiany?"
+
+msgid "Target page"
+msgstr "Strona docelowa"
+
+msgid "Text color"
+msgstr "Kolor tekstu"
+
+msgid "The default theme renders this footer. Custom themes decide whether and where to display it."
+msgstr "Motyw domyślny wyświetla tę stopkę. Własne motywy decydują, czy i gdzie ją pokazać."
+
+msgid "The maximum photo size is 10 MB."
+msgstr "Maksymalny rozmiar zdjęcia to 10 MB."
+
+msgid "The menu may have at most 9 levels."
+msgstr "Menu może mieć najwyżej 9 poziomów."
+
+msgid "The page cannot have subpages or menu links. A copy of removed content is kept in the private trash."
+msgstr "Strona nie może mieć podstron ani odnośników w menu. Kopia usuniętej treści pozostaje w prywatnym koszu."
+
+msgid "The page could not be loaded."
+msgstr "Nie udało się wczytać strony."
+
+msgid "The panel does not edit plugin code. Content and galleries may accompany a plugin."
+msgstr "Panel nie edytuje kodu wtyczki. Wtyczce może towarzyszyć treść i galeria."
+
+msgid "The photo could not be uploaded."
+msgstr "Nie udało się wysłać zdjęcia."
+
+msgid "The root address redirects to the selected published page."
+msgstr "Adres główny przekierowuje do wybranej opublikowanej strony."
+
+msgid "The third option lets the plugin decide how to use the content. Without a plugin, content is always displayed. Gallery and subpage settings remain independent."
+msgstr "Trzecia opcja pozwala wtyczce zdecydować, jak wykorzystać treść. Bez wtyczki treść jest zawsze wyświetlana. Ustawienia galerii i podstron pozostają niezależne."
+
+msgid "The upload timed out. Check the gallery before trying again."
+msgstr "Wysyłanie przekroczyło limit czasu. Sprawdź galerię przed ponowną próbą."
+
+msgid "This applies to the currently saved plugin assignment."
+msgstr "Dotyczy to obecnie zapisanego przypisania wtyczki."
+
+msgid "This content comes from the shared file. Saving will rename it to match the current language configuration."
+msgstr "Ta treść pochodzi ze wspólnego pliku. Zapisanie zmieni jego nazwę zgodnie z bieżącą konfiguracją języków."
+
+msgid "This language does not have its own file yet. The editor shows the default language as a starting point; the first save creates a separate translation."
+msgstr "Ten język nie ma jeszcze własnego pliku. Edytor pokazuje język domyślny jako punkt wyjścia; pierwszy zapis utworzy osobne tłumaczenie."
+
+msgid "This only hides the automatic list in the content. Subpages remain available at their addresses and in menus."
+msgstr "Ukrywa to tylko automatyczną listę w treści. Podstrony nadal są dostępne pod swoimi adresami i w menu."
+
+msgid "This plugin is not assigned to any page."
+msgstr "Ta wtyczka nie jest przypisana do żadnej strony."
+
+msgid "Title, content and settings"
+msgstr "Tytuł, treść i ustawienia"
+
+msgid "Try again"
+msgstr "Spróbuj ponownie"
+
+msgid "Underline"
+msgstr "Podkreślenie"
+
+msgid "Undo"
+msgstr "Cofnij"
+
+msgid "Unsaved changes"
+msgstr "Niezapisane zmiany"
+
+msgid "Unsaved order"
+msgstr "Niezapisana kolejność"
+
+msgid "Up to 10 MB and 25 megapixels per photo. Uploads run in the background, so you can keep editing."
+msgstr "Do 10 MB i 25 megapikseli na zdjęcie. Wysyłanie działa w tle, więc możesz dalej edytować treść."
+
+msgid "Upload cancelled."
+msgstr "Wysyłanie anulowane."
+
+msgid "Uploading {file}"
+msgstr "Wysyłanie: {file}"
+
+msgid "Used in the browser tab and as the default brand name."
+msgstr "Używany na karcie przeglądarki i jako domyślna nazwa marki."
+
+msgid "Used when no supported language has been selected, for example en or en-US."
+msgstr "Używany, gdy nie wybrano obsługiwanego języka, na przykład pl albo pl-PL."
+
+msgid "Wait for saving to finish."
+msgstr "Poczekaj na zakończenie zapisywania."
+
+msgid "Wait for the gallery operation to finish. Your content will not be lost."
+msgstr "Poczekaj na zakończenie operacji galerii. Twoja treść nie zostanie utracona."
+
+msgid "Without a logo, the name remains visible regardless of this setting."
+msgstr "Bez logo nazwa pozostaje widoczna niezależnie od tego ustawienia."
+
+msgid "Page content — visual editor"
+msgstr "Treść strony — edytor wizualny"
+
+msgid "HTML block — preserved unchanged. Edit in source mode."
+msgstr "Blok HTML — zachowany bez zmian. Edytuj w trybie źródłowym."
+
+msgid "HTML fragment — edit in source"
+msgstr "Fragment HTML — edytuj w źródle"
+
+msgid "This part of the page could not be started. Refresh the page to try again."
+msgstr "Nie udało się uruchomić tej części strony. Odśwież stronę, aby spróbować ponownie."
+
+msgid "This part of the page encountered an error. The rest of the site is still available."
+msgstr "Ta część strony napotkała błąd. Pozostała część witryny jest nadal dostępna."
+
+msgid "The script response could not be read."
+msgstr "Nie udało się odczytać odpowiedzi skryptu."
+
+msgid "A script sending too many messages was stopped."
+msgstr "Zatrzymano skrypt, który wysyłał zbyt wiele komunikatów."
+
+msgid "A script returning invalid data was stopped."
+msgstr "Zatrzymano skrypt, który zwrócił nieprawidłowe dane."
+
+msgid "The script stopped responding and was terminated. Navigation is still available."
+msgstr "Skrypt przestał odpowiadać i został zatrzymany. Nawigacja nadal działa."
+
+msgid "This browser does not support this part of the page."
+msgstr "Ta przeglądarka nie obsługuje tej części strony."
+
+msgid "Invalid plugin configuration."
+msgstr "Nieprawidłowa konfiguracja wtyczki."
+
+msgid "Download gallery diagnostics"
+msgstr "Pobierz diagnostykę galerii"
+
+msgid "The plugin is temporarily unavailable."
+msgstr "Wtyczka jest chwilowo niedostępna."
+msgid "This part of the page is temporarily unavailable. The rest of the site is working normally."
+msgstr "Ta część strony jest chwilowo niedostępna. Pozostała część witryny działa normalnie."
+msgid "Sign in again."
+msgstr "Zaloguj się ponownie."
+msgid "Invalid form token. Refresh the page."
+msgstr "Nieprawidłowy token formularza. Odśwież stronę."
+msgid "Request origin is not allowed."
+msgstr "Niedozwolone źródło żądania."
+msgid "Invalid form data."
+msgstr "Nieprawidłowe dane formularza."
+msgid "The file is too large (maximum 10 MB)."
+msgstr "Plik jest zbyt duży (maksymalnie 10 MB)."
+msgid "The operation could not be completed."
+msgstr "Nie udało się wykonać operacji."
+msgid "File not found."
+msgstr "Nie znaleziono pliku."
+msgid "Plugin not found."
+msgstr "Nie znaleziono wtyczki."
+msgid "Plugin file not found."
+msgstr "Nie znaleziono pliku wtyczki."
+msgid "The plugin is not assigned to this page."
+msgstr "Wtyczka nie jest przypisana do tej strony."
+msgid "The session has expired."
+msgstr "Sesja wygasła."
+msgid "The session has expired. Sign in again."
+msgstr "Sesja wygasła. Zaloguj się ponownie."
+msgid "The plugin does not provide an administration view."
+msgstr "Wtyczka nie udostępnia widoku administracyjnego."
+msgid "The plugin is temporarily unavailable. The panel is still working."
+msgstr "Wtyczka jest chwilowo niedostępna. Panel nadal działa."
+msgid "plugin.json could not be read."
+msgstr "Nie udało się odczytać plugin.json."
+msgid "The selected theme could not be prepared."
+msgstr "Nie udało się przygotować wybranego motywu."
+msgid "Choose an image."
+msgstr "Wybierz obraz."
+msgid "Language codes cannot be repeated."
+msgstr "Kody języków nie mogą się powtarzać."
+msgid "The available language list must include the default language."
+msgstr "Lista dostępnych języków musi zawierać język domyślny."
+msgid "Page metadata is missing."
+msgstr "Brak metadanych strony."
+msgid "This language is not available for the site."
+msgstr "Ten język nie jest dostępny dla strony."
+msgid "Page not found."
+msgstr "Nie znaleziono strony."
+msgid "The requested language version was not found."
+msgstr "Nie znaleziono wybranej wersji językowej strony."
+msgid "The same subpage occurs more than once in the list."
+msgstr "Lista zawiera tę samą podstronę więcej niż raz."
+msgid "The list contains a page outside the selected section."
+msgstr "Lista zawiera stronę spoza wybranej sekcji."
+msgid "A page already exists at this address."
+msgstr "Strona pod tym adresem już istnieje."
+msgid "Parent page not found."
+msgstr "Nie znaleziono strony nadrzędnej."
+msgid "Remove links to this page from the menu and home page settings first."
+msgstr "Najpierw usuń odnośniki do strony z menu i ustawień strony głównej."
+msgid "Remove the subpages first. They are not deleted automatically."
+msgstr "Najpierw usuń podstrony. Nie są usuwane automatycznie."
+msgid "Settings changed after opening the form. Refresh the page before saving."
+msgstr "Ustawienia zmieniły się po otwarciu formularza. Odśwież stronę przed zapisem."
+msgid "The home page must be a published page."
+msgstr "Strona startowa musi być opublikowaną stroną."
+msgid "Invalid theme."
+msgstr "Nieprawidłowy motyw."
+msgid "The menu may contain at most 200 items."
+msgstr "Menu może zawierać maksymalnie 200 elementów."
+msgid "The menu points to a page that does not exist."
+msgstr "Menu wskazuje na nieistniejącą stronę."
+msgid "A gallery may contain at most 500 photos."
+msgstr "Galeria może zawierać maksymalnie 500 zdjęć."
+msgid "Invalid image."
+msgstr "Nieprawidłowy obraz."
+msgid "Allowed image formats are JPEG, PNG, WebP, GIF and AVIF."
+msgstr "Dozwolone formaty obrazów to JPEG, PNG, WebP, GIF i AVIF."
+msgid "Photo not found."
+msgstr "Nie znaleziono zdjęcia."
+msgid "Unknown plugin."
+msgstr "Nieznana wtyczka."
+msgid "This address is reserved by the engine."
+msgstr "Ten adres jest zarezerwowany przez silnik."
+msgid "Invalid path."
+msgstr "Nieprawidłowa ścieżka."
+msgid "The path is outside the content directory."
+msgstr "Ścieżka znajduje się poza katalogiem treści."
+msgid "Symbolic links are not supported."
+msgstr "Dowązania symboliczne nie są obsługiwane."
+msgid "The file changed after opening the form. Refresh the page before saving; your changes were not overwritten."
+msgstr "Plik zmienił się po otwarciu formularza. Odśwież stronę przed zapisem; Twoje zmiany nie zostały nadpisane."
+msgid "Too many sessions. Try again later."
+msgstr "Zbyt wiele sesji. Spróbuj później."
+msgid "Too many login attempts. Try again in 10 minutes."
+msgstr "Zbyt wiele prób logowania. Spróbuj za 10 minut."
+msgid "Invalid login or password."
+msgstr "Nieprawidłowy login lub hasło."
+msgid "Permission denied."
+msgstr "Brak uprawnień."
+msgid "The passwords do not match."
+msgstr "Podane hasła nie są identyczne."
+msgid "The password must be between 8 and 1024 characters long."
+msgstr "Hasło musi mieć od 8 do 1024 znaków."
+msgid "The account already exists."
+msgstr "Konto już istnieje."
+msgid "Account not found."
+msgstr "Nie znaleziono konta."
+msgid "The account limit has been reached."
+msgstr "Osiągnięto limit kont."
+msgid "The primary administrator cannot be deleted."
+msgstr "Nie można usunąć głównego administratora."
+msgid "The page could not be loaded. Try again later."
+msgstr "Nie udało się załadować strony. Spróbuj ponownie później."
+msgid "Invalid request."
+msgstr "Nieprawidłowe żądanie."
+msgid "version {version}"
+msgstr "wersja {version}"
+msgid "Open navigation"
+msgstr "Otwórz nawigację"
+msgid "Close navigation"
+msgstr "Zamknij nawigację"
+msgid "Expand: {title}"
+msgstr "Rozwiń: {title}"
+msgid "Collapse: {title}"
+msgstr "Zwiń: {title}"
+msgid "Main page"
+msgstr "Strona główna"
+msgid "Uploading…"
+msgstr "Wysyłanie…"
+msgid "Add photo"
+msgstr "Dodaj zdjęcie"
+
+msgid "Menu language version"
+msgstr "Wersja językowa menu"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Translate menu names without changing its shared structure or links."
+msgstr "Tłumacz nazwy menu bez zmieniania jego wspólnego układu ani odnośników."
+
+msgid "Save translations"
+msgstr "Zapisz tłumaczenia"
+
+msgid "Menu structure and links are shared by every language. Here you only translate the names shown to visitors."
+msgstr "Układ menu i odnośniki są wspólne dla wszystkich języków. Tutaj tłumaczysz tylko nazwy widoczne dla odwiedzających."
+
+msgid "Menu translations"
+msgstr "Tłumaczenia menu"
+
+msgid "Default name"
+msgstr "Nazwa domyślna"
+
+msgid "Translation"
+msgstr "Tłumaczenie"
+
+msgid "Add an item to the default-language menu before creating translations."
+msgstr "Dodaj element do menu w języku domyślnym, zanim utworzysz tłumaczenia."
+
+msgid "The default language menu is edited as a menu tree."
+msgstr "Menu w języku domyślnym edytuje się jako drzewo."
+
+msgid "The menu structure changed after opening the form. Refresh the page before saving."
+msgstr "Układ menu zmienił się po otwarciu formularza. Odśwież stronę przed zapisaniem."
+
+msgid "The translation file changed after opening the form. Refresh the page before saving."
+msgstr "Plik tłumaczeń zmienił się po otwarciu formularza. Odśwież stronę przed zapisaniem."
+
+msgid "Copy gallery from another language"
+msgstr "Skopiuj galerię z innego języka"
+
+msgid "Copy gallery from"
+msgstr "Skopiuj galerię z"
+
+msgid "Copy gallery"
+msgstr "Skopiuj galerię"
+
+msgid "Copying replaces this language version’s gallery. The image files are shared, not duplicated."
+msgstr "Kopiowanie zastępuje galerię tej wersji językowej. Pliki zdjęć są współdzielone, a nie powielane."
+
+msgid "Choose a different language as the gallery source."
+msgstr "Wybierz inny język jako źródło galerii."
+
+msgid "The selected language does not have its own gallery."
+msgstr "Wybrany język nie ma własnej galerii."
+
+msgid "The selected language gallery is empty."
+msgstr "Galeria w wybranym języku jest pusta."
+
+msgid "Site settings language version"
+msgstr "Wersja językowa ustawień strony"
+
+msgid "This language does not have its own site settings file yet. Translatable values currently fall back to the default language."
+msgstr "Ten język nie ma jeszcze własnego pliku ustawień strony. Teksty korzystają obecnie z wartości języka domyślnego."
+
+msgid "Only visitor-facing text can differ by language. Disabled settings always come from site.yml."
+msgstr "W poszczególnych językach może różnić się tylko tekst widoczny dla odwiedzających. Wyłączone ustawienia zawsze pochodzą z site.yml."
+
+msgid "The default language uses the main site settings file."
+msgstr "Język domyślny korzysta z głównego pliku ustawień strony."
+
+msgid "The localized site settings changed after opening the form. Refresh the page before saving."
+msgstr "Ustawienia tej wersji językowej zmieniły się po otwarciu formularza. Odśwież stronę przed zapisaniem."

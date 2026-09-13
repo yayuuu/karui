@@ -1,0 +1,74 @@
+<div class="panel-section-heading"><div><h2>{{ edit.page.title }}</h2><p><code>{{ edit.page.href }}</code> <span class="panel-badge">{{ edit.page.sourceFile }}</span></p></div><a class="button" href="{{ edit.page.href }}?lang={{ edit.language }}" target="_blank" rel="noopener">{{ t('Open page') }} ↗</a></div>
+<div data-edit-page data-path="{{ edit.page.href }}" data-language="{{ edit.language }}" data-revision="{{ edit.revision }}">
+  <div class="panel-savebar sticky-savebar page-savebar">
+    <label class="panel-language-choice"><select data-page-language aria-label="{{ t('Page language version') }}">
+      @each(code in edit.languages)
+        <option value="{{ code }}" {{ code === edit.language ? 'selected' : '' }}>{{ code.toUpperCase() }}</option>
+      @end
+    </select></label>
+    <span data-dirty-status>{{ t('No unsaved changes') }}</span><button class="primary" type="submit" form="page-edit-form" data-page-submit>{{ t('Save changes') }}</button>
+  </div>
+  @if(edit.inherited)
+    <p class="panel-note">{{ t('This language does not have its own file yet. The editor shows the default language as a starting point; the first save creates a separate translation.') }}</p>
+  @elseif(edit.migration)
+    <p class="panel-note">{{ t('This content comes from the shared file. Saving will rename it to match the current language configuration.') }}</p>
+  @end
+  <details class="panel-section" open>
+    <summary>{{ t('Edit page') }} <span>{{ t('Title, content and settings') }}</span></summary>
+    <form id="page-edit-form" data-save-page>
+      <div class="panel-fields"><label>{{ t('Page title') }}<input type="text" name="title" value="{{ edit.page.title }}" maxlength="300" required></label><label>{{ t('Order') }}<input type="number" name="order" min="0" value="{{ edit.page.order }}" required></label></div>
+      <label>{{ t('Keywords') }}<input type="text" name="keywords" value="{{ edit.page.keywords }}" maxlength="2000"></label>
+      <fieldset class="panel-page-actions"><legend>{{ t('Page availability') }}</legend><label><input type="checkbox" name="published" {{ edit.page.published !== false ? 'checked' : '' }}> {{ t('Page published') }}</label><small>{{ t('Disabling this hides the page and its children from navigation and makes their addresses return 404. Panel editing remains available.') }}</small></fieldset>
+      <fieldset class="panel-page-actions">
+        <legend>{{ t('Page header buttons') }}</legend>
+        <label><input type="checkbox" name="showPrint" {{ edit.page.showPrint ? 'checked' : '' }}> {{ t('Show Print button') }}</label>
+        <label><input type="checkbox" name="showPdf" {{ edit.page.showPdf ? 'checked' : '' }}> {{ t('Show PDF button') }}</label>
+      </fieldset>
+      <label>{{ t('Dynamic plugin') }}<select name="plugin"><option value="">{{ t('None — content and gallery handled by the engine') }}</option>
+        @each(name in plugins)
+          <option value="{{ name }}" {{ name === edit.page.plugin ? 'selected' : '' }}>{{ name }}</option>
+        @end
+      </select><small>{{ t('The panel does not edit plugin code. Content and galleries may accompany a plugin.') }}</small></label>
+      <label>{{ t('Plugin placement relative to content') }}<select name="pluginPlacement">
+        <option value="after" {{ !edit.page.pluginPlacement || edit.page.pluginPlacement === 'after' ? 'selected' : '' }}>{{ t('Below static content') }}</option>
+        <option value="before" {{ edit.page.pluginPlacement === 'before' ? 'selected' : '' }}>{{ t('Above static content') }}</option>
+        <option value="content" {{ edit.page.pluginPlacement === 'content' ? 'selected' : '' }}>{{ t('Pass content to the plugin') }}</option>
+      </select><small>{{ t('The third option lets the plugin decide how to use the content. Without a plugin, content is always displayed. Gallery and subpage settings remain independent.') }}</small></label>
+      @if(pluginAdmin)
+        <p class="panel-note"><a class="button" href="{{ pluginAdmin }}">{{ t('Plugin administration') }} ↗</a> {{ t('This applies to the currently saved plugin assignment.') }}</p>
+      @end
+      <label>{{ t('Content format') }}<select name="format" data-content-format><option value="markdown" {{ edit.page.format !== 'html' ? 'selected' : '' }}>Markdown</option><option value="html" {{ edit.page.format === 'html' ? 'selected' : '' }}>HTML</option></select><small>{{ t('Markdown is the default for new pages. HTML provides full formatting. Format changes are saved together with the page.') }}</small></label>
+      <div class="editor-modes" role="group" aria-label="{{ t('Editor mode') }}"><button type="button" data-editor-mode="visual" aria-pressed="true">{{ t('Visual editor') }}</button><button type="button" data-editor-mode="source" aria-pressed="false">{{ t('Source') }} {{ edit.page.format === 'html' ? 'HTML' : 'Markdown' }}</button><button type="button" data-editor-mode="preview" aria-pressed="false">{{ t('Preview') }}</button></div>
+      <div data-rich-editor><div class="editor-toolbar" data-editor-toolbar></div><div data-editor-content></div></div>
+      <label data-source-label hidden>{{ t('Page content') }}<textarea name="body" data-source rows="18" spellcheck="false">{{ edit.body }}</textarea></label>
+      <iframe title="{{ t('Content preview') }}" class="editor-preview" data-editor-preview sandbox hidden></iframe>
+      <p class="panel-note">{{ t('Custom HTML blocks are preserved and marked in the editor. Edit them in source mode.') }}</p>
+    </form>
+  </details>
+  <details class="panel-section" {{ children.length ? 'open' : '' }}>
+    <summary>{{ t('Subpages') }} <span>{{ children.length }}</span></summary>
+    <label class="panel-plain-toggle">{{ t('List visibility') }}<span><input type="checkbox" name="showSubpages" form="page-edit-form" {{ edit.page.showSubpages !== false ? 'checked' : '' }}> {{ t('Show subpage list') }}</span><small>{{ t('This only hides the automatic list in the content. Subpages remain available at their addresses and in menus.') }}</small></label>
+    @if(children.length)
+      <form data-subpage-order data-parent="{{ edit.page.href }}" data-language="{{ edit.language }}">
+        <div class="panel-page-list" data-subpage-list>
+          @each((child, index) in children)
+            <div class="panel-page-row panel-subpage-row" data-subpage-row data-title="{{ child.title }}">
+              <span class="panel-subpage-title"><strong><span data-subpage-number>{{ index + 1 }}.</span> <a href="/panel/page?path={{ encodeURIComponent(child.href) }}&language={{ edit.language }}">{{ child.title }}</a></strong><small>{{ child.href }}</small></span>
+              <label class="panel-subpage-order">{{ t('Order') }}<input type="number" min="0" value="{{ child.order }}" required aria-label="{{ t('Order') }}: {{ child.title }}" data-subpage-order-input data-child-path="{{ child.href }}" data-child-revision="{{ child.revision }}"></label>
+              <a class="button" href="/panel/page?path={{ encodeURIComponent(child.href) }}&language={{ edit.language }}">{{ t('Edit') }} →</a>
+            </div>
+          @end
+        </div>
+        <div class="panel-subpage-save"><span data-subpage-order-status>{{ t('Order saved') }}</span><button type="submit">{{ t('Save order') }}</button></div>
+      </form>
+    @end
+    <a class="button" href="/panel/new?parent={{ encodeURIComponent(edit.page.href) }}">＋ {{ t('Add subpage') }}</a>
+  </details>
+  <details class="panel-section" open>
+    <summary>{{ t('Gallery') }} <span data-photo-count>{{ t('{count} photos', { count: edit.page.gallery.length }) }}</span></summary>
+    <label>{{ t('Gallery visibility') }}<select name="galleryVisibility" form="page-edit-form"><option value="all" {{ edit.page.galleryVisibility === 'all' ? 'selected' : '' }}>{{ t('Show the full gallery') }}</option><option value="unused" {{ edit.page.galleryVisibility === 'unused' ? 'selected' : '' }}>{{ t('Show photos not used in content') }}</option><option value="hidden" {{ edit.page.galleryVisibility === 'hidden' ? 'selected' : '' }}>{{ t('Hide gallery') }}</option></select></label>
+    <p class="panel-note">{{ t('A gallery can be added to any page. Removing a photo removes it from this gallery, not from other places on the site.') }}</p>
+    <div data-photo-manager data-photos="{{ JSON.stringify(edit.page.gallery) }}" data-gallery-sources="{{ JSON.stringify(gallerySources) }}"></div>
+  </details>
+  <details class="panel-section panel-danger"><summary>{{ t('Delete page') }}</summary><p>{{ t('The page cannot have subpages or menu links. A copy of removed content is kept in the private trash.') }}</p><button type="button" class="danger" data-delete-page>{{ t('Delete this page') }}</button></details>
+</div>

@@ -1,0 +1,13 @@
+node_modules/
+karui/dist/
+karui/public/assets/main.js
+karui/public/assets/panel.js
+.env
+karui/test-results/
+karui/playwright-report/
+karui/artifacts/
+/test-results/
+/artifacts/
+/content/**
+!/content/
+!/content/.keep

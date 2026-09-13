@@ -1,0 +1,37 @@
+<div class="panel-section-heading"><div><h2>{{ t('Menu') }}</h2><p>{{ menu.language === menu.defaultLanguage ? t('Drag the handle to reorder an item or move it into a submenu.') : t('Translate menu names without changing its shared structure or links.') }}</p></div></div>
+<div data-menu-screen data-language="{{ menu.language }}" data-default-language="{{ menu.defaultLanguage }}">
+  <div class="panel-savebar sticky-savebar menu-savebar">
+    <div class="menu-savebar-start">
+    <label class="panel-language-choice"><select data-menu-language aria-label="{{ t('Menu language version') }}">
+        @each(code in menu.languages)
+          <option value="{{ code }}" {{ code === menu.language ? 'selected' : '' }}>{{ code.toUpperCase() }}</option>
+        @end
+      </select></label>
+      @if(menu.language === menu.defaultLanguage)
+        <button type="button" data-menu-add>＋ {{ t('Add menu item') }}</button>
+      @end
+    </div>
+    <span data-menu-status role="status">{{ t('No unsaved changes') }}</span>
+    <button type="button" class="primary" data-menu-save>{{ menu.language === menu.defaultLanguage ? t('Save menu') : t('Save translations') }}</button>
+  </div>
+  @if(menu.language === menu.defaultLanguage)
+    <div data-menu-editor data-revision="{{ menu.revision }}" data-menu="{{ JSON.stringify(menu.site.menu) }}" data-pages="{{ JSON.stringify(pages.map(page => ({ title: page.title, href: page.href }))) }}">
+      <div class="menu-editor-hint"><span>{{ t('MAIN MENU') }}</span><span>{{ t('Nested items create submenus') }}</span></div>
+      <ul class="menu-tree" data-menu-root aria-label="{{ t('Menu items') }}"></ul>
+      <p class="panel-note">{{ t('Drag items to change order and nesting. External links can open in the same or a new tab. Changes are published only after saving.') }}</p>
+    </div>
+  @else
+    <div data-menu-translations data-language="{{ menu.language }}" data-revision="{{ menu.translationRevision }}" data-site-revision="{{ menu.revision }}">
+      <p class="panel-note">{{ t('Menu structure and links are shared by every language. Here you only translate the names shown to visitors.') }}</p>
+      <div class="panel-page-list menu-translation-table" role="table" aria-label="{{ t('Menu translations') }}">
+        <div class="menu-translation-row menu-translation-heading" role="row"><strong role="columnheader">{{ t('Default name') }}</strong><strong role="columnheader">{{ t('Translation') }}</strong></div>
+        @each(item in menu.translations)
+          <label class="menu-translation-row" role="row"><span role="cell">{{ item.source }}</span><input role="cell" type="text" value="{{ item.translation }}" maxlength="200" data-menu-translation data-source="{{ item.source }}" aria-label="{{ t('Translation') }}: {{ item.source }}"></label>
+        @end
+      </div>
+      @if(!menu.translations.length)
+        <p class="panel-note">{{ t('Add an item to the default-language menu before creating translations.') }}</p>
+      @end
+    </div>
+  @end
+</div>

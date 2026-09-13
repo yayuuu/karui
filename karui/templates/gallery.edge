@@ -1,0 +1,15 @@
+<section data-gallery data-photos="{{ JSON.stringify(page.gallery) }}">
+<div class="gallery">
+  @each((photo, index) in page.gallery)
+    <a class="imgframe" href="{{ photo.src }}" data-action="open" data-value="{{ index }}" aria-label="{{ photo.alt || t('Photo {number}', { number: index + 1 }) }}"><img src="{{ photo.src }}" width="{{ photo.width }}" height="{{ photo.height }}" loading="{{ index < 8 ? 'eager' : 'lazy' }}" decoding="sync" alt="{{ photo.alt }}"></a>
+  @end
+</div>
+<dialog class="lightbox" aria-label="{{ t('Photo preview') }}">
+  <div class="lightbox-title"><span><span data-gallery-counter></span> <small class="lightbox-download">(<a data-gallery-download download>{{ t('Download') }}</a>)</small></span><button data-action="close" aria-label="{{ t('Close') }}">×</button></div>
+  <div class="lightbox-photo">
+    <img data-gallery-image alt="">
+    <button class="photo-navigation photo-previous" data-action="previous" aria-label="{{ t('Previous') }}"><span>{{ t('Previous') }}</span></button>
+    <button class="photo-navigation photo-next" data-action="next" aria-label="{{ t('Next') }}"><span>{{ t('Next') }}</span></button>
+  </div>
+</dialog>
+</section>

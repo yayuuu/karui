@@ -1,0 +1,11 @@
+@if(submenu.length)
+  <nav class="submenu" aria-label="{{ t('Subpages') }}">
+    <ul>
+      @each(item in submenu)
+        <li style="margin-inline: {{ (item.depth || 0) * 6 }}px">
+          @include('partials/menu-link')
+        </li>
+      @end
+    </ul>
+  </nav>
+@end

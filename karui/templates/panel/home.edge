@@ -1,0 +1,8 @@
+<section class="panel-intro"><h2>{{ t('Your site, under control') }}</h2><p>{{ t('Content, photos and navigation in one place. Saved changes are visible immediately.') }}</p></section>
+<div class="panel-cards">
+  <a class="panel-card" href="/panel/pages"><span class="panel-card-number">{{ pageCount }}</span><h3>{{ t('Pages and subpages') }} <span>↗</span></h3><p>{{ t('Edit content, add subpages and manage galleries.') }}</p></a>
+  <a class="panel-card" href="/panel/menu"><span class="panel-card-number">↕</span><h3>{{ t('Menu tree') }} <span>↗</span></h3><p>{{ t('Drag menu items to change their order and level.') }}</p></a>
+  <a class="panel-card" href="/panel/accounts"><span class="panel-card-number">◎</span><h3>{{ user.role === 'owner' ? t('Administrator accounts') : t('My account') }} <span>↗</span></h3><p>{{ t('Manage panel access and passwords.') }}</p></a>
+  <a class="panel-card" href="/panel/settings"><span class="panel-card-number">⚙</span><h3>{{ t('Site settings') }} <span>↗</span></h3><p>{{ t('Configure the title, home page, branding, theme and footer.') }}</p></a>
+</div>
+<p class="panel-note">{{ t('{count} gallery photos', { count: photoCount }) }} · {{ t('Data stored in the content directory') }} · {{ t('No database required') }}</p>

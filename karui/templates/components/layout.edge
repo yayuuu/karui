@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="{{ site.language || 'en' }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ site.title }}</title>
+  <meta name="keywords" content="{{ page.keywords }}">
+  @if(site.description)
+    <meta name="description" content="{{ site.description }}">
+  @end
+  @if(site.favicon)
+    <link rel="icon" href="{{ site.favicon }}">
+  @end
+  <link rel="stylesheet" href="{{ theme.assets['site.css'] }}">
+  <link rel="stylesheet" href="{{ theme.assets['ui.css'] }}">
+  <link rel="stylesheet" href="{{ theme.assets['code.css'] }}">
+  <link rel="stylesheet" href="{{ theme.assets['tables.css'] }}">
+  @if(page.gallery && page.gallery.length)
+    <link rel="stylesheet" data-page-style href="{{ theme.assets['gallery.css'] }}">
+  @end
+  @if(styleUrl)
+    <link rel="stylesheet" data-page-style href="{{ styleUrl }}">
+  @end
+  <script type="module" src="/assets/main.js?v={{ assetVersion }}"></script>
+</head>
+<body data-theme="{{ theme.name }}" data-theme-client="{{ theme.client }}" data-print="{{ print }}" data-asset-version="{{ assetVersion }}" data-translations="{{ JSON.stringify(clientTranslations) }}">
+  <a class="skip-link" href="#page">{{ t('Skip to content') }}</a>
+  <div class="site-shell {{ submenu.length ? 'with-submenu' : '' }}">
+    <header class="site-header">
+      <div class="site-identity">
+        <a class="site-brand" href="/">
+          @if(site.logo)
+            <img class="site-logo" src="{{ site.logo }}" alt="{{ site.showBrandName === false ? (site.brandName || site.title) : '' }}">
+          @end
+          @if(site.showBrandName !== false || !site.logo)
+            <span>{{ site.brandName || site.title }}</span>
+          @end
+        </a>
+        @if(site.tagline)
+          <span class="site-tagline">{{ site.tagline }}</span>
+        @end
+      </div>
+      <nav id="menu" aria-label="{{ t('Main menu') }}">
+        @include('partials/menu')
+      </nav>
+      @if(languageLinks.length > 1)
+        <form class="language-switcher" method="get" aria-label="{{ t('Language') }}">
+          <label><span class="visually-hidden">{{ t('Language') }}</span><select name="lang" data-language-select aria-label="{{ t('Language') }}">
+            @each(item in languageLinks)
+              <option value="{{ item.code }}" data-href="{{ item.href }}" lang="{{ item.code }}" {{ item.current ? 'selected' : '' }}>{{ item.code.toUpperCase() }}</option>
+            @end
+          </select></label>
+          <noscript><button type="submit">{{ t('Change language') }}</button></noscript>
+        </form>
+      @end
+    </header>
+      <main id="page" tabindex="-1" aria-label="{{ page.title }}">
+        {{{ await $slots.main() }}}
+      </main>
+    @include('partials/submenu')
+    @if(footerHtml)
+      <footer class="site-footer">{{{ footerHtml }}}</footer>
+    @end
+  </div>
+  @if(back)
+    <a href="{{ back }}" class="navibutton backbutton" title="{{ t('Back') }}" aria-label="{{ t('Back') }}">◄</a>
+  @end
+  <button class="navibutton topbutton" title="{{ t('Back to top') }}" aria-label="{{ t('Back to top') }}" hidden>▲</button>
+</body>
+</html>

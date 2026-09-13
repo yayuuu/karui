@@ -1,0 +1,123 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, mkdir, writeFile, readFile, rm, readdir, symlink } from 'node:fs/promises';
+import { join, resolve } from 'node:path';
+import { tmpdir } from 'node:os';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { Themes } from '../src/themes/index.js';
+import { buildApp } from '../src/app.js';
+import { configFromEnv } from '../src/config.js';
+import { PanelFiles } from '../src/admin/files.js';
+import { PanelStore } from '../src/admin/store.js';
+import { fragmentType } from '../src/page-fragment.js';
+
+const execute = promisify(execFile);
+
+test('themes compile lazily, reuse versioned snapshots, inherit templates and publish only declared assets', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'engine-themes-'));
+  t.after(() => rm(root, { recursive: true, force: true }));
+  const content = join(root, 'content'), cache = join(root, 'cache'), theme = join(content, 'themes/sample');
+  await mkdir(join(theme, 'assets/images'), { recursive: true });
+  await mkdir(join(theme, 'templates/partials'), { recursive: true });
+  const manifest = (version: string) => writeFile(join(theme, 'theme.json'), JSON.stringify({ name: 'Sample', version }));
+  await manifest('1');
+  await writeFile(join(theme, 'assets/images/icon.svg'), '<svg>first</svg>');
+  await writeFile(join(theme, 'templates/partials/home.edge'), '<h1>Custom {{ site.title }}</h1>');
+  await writeFile(join(theme, 'client.ts'), 'export default () => { document.body.dataset.sample = "ready"; };');
+  await writeFile(join(theme, 'private.txt'), 'secret');
+  await symlink(join(theme, 'private.txt'), join(theme, 'assets/private.txt'));
+  const themes = new Themes(resolve('karui'), content, cache, 'test');
+  assert.deepEqual((await themes.list()).map(item => item.id), ['default', 'sample']);
+  await assert.rejects(readdir(cache), { code: 'ENOENT' });
+  const [first, duplicate] = await Promise.all([themes.get('sample'), themes.get('sample')]);
+  assert.equal(first, duplicate);
+  assert.equal(await first.edge.render('partials/home', { site: { title: 'Title' } }), '<h1>Custom Title</h1>');
+  assert.ok(first.theme.assets['panel.css']);
+  assert.match(first.theme.client, /^\/assets\/themes\/sample\/[a-f0-9]{64}\/client.js$/);
+  const file = await themes.asset('sample', first.theme.key, 'images/icon.svg');
+  assert.ok(file); assert.equal(await readFile(join(file.root, file.path), 'utf8'), '<svg>first</svg>');
+  for (const path of ['private.txt', '../theme.json', 'theme.json', 'client.ts', 'templates/partials/home.edge', '.hidden']) {
+    assert.equal(await themes.asset('sample', first.theme.key, path), null);
+  }
+  assert.equal(await themes.asset('different', first.theme.key, 'images/icon.svg'), null);
+  await writeFile(join(theme, 'assets/images/icon.svg'), '<svg>second</svg>');
+  await writeFile(join(theme, 'client.ts'), 'invalid syntax !');
+  const restarted = await new Themes(resolve('karui'), content, cache, 'test').get('sample');
+  assert.equal(restarted.theme.key, first.theme.key, 'unchanged version must not recompile on restart');
+  assert.equal(await readFile(join(file.root, file.path), 'utf8'), '<svg>first</svg>');
+  await manifest('2');
+  await assert.rejects(themes.validate('sample'));
+  assert.equal((await themes.get('sample')).theme.name, 'default', 'bad theme falls back without breaking the site');
+  await writeFile(join(theme, 'client.ts'), 'export default () => {};');
+  const updated = await themes.get('sample');
+  assert.notEqual(updated.theme.key, first.theme.key);
+  assert.notEqual(updated.assetVersion, first.assetVersion);
+  const next = await themes.asset('sample', updated.theme.key, 'images/icon.svg');
+  assert.equal(await readFile(join(next!.root, next!.path), 'utf8'), '<svg>second</svg>');
+  assert.equal(await readFile(join(file.root, file.path), 'utf8'), '<svg>first</svg>', 'in-flight pages retain their version');
+  await assert.rejects(themes.validate('../sample'));
+  assert.equal((await themes.get('missing')).theme.name, 'default');
+});
+
+test('empty content renders default SSR, fragments and panel, and permits creating site settings', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'engine-empty-'));
+  const content = join(root, 'content');
+  await mkdir(content);
+  const app = await buildApp({ ...configFromEnv(), contentDir: content, contentCacheDir: join(root, 'cache'), contentRefreshMs: 100, pluginWorkers: 1, pluginMaxWorkers: 2 });
+  t.after(async () => { await app.close(); await rm(root, { recursive: true, force: true }); });
+  const response = await app.inject('/');
+  assert.equal(response.statusCode, 200, response.body);
+  assert.match(response.body, /data-theme="default"/);
+  assert.match(response.body, /id="page"/);
+  assert.match(response.body, /class="karui-welcome"/);
+  assert.match(response.body, /karui-wordmark">karui</);
+  assert.match(response.body, /class="welcome-slogan"/);
+  assert.doesNotMatch(response.body, /data-background|fonts.googleapis/);
+  const stylesheet = /href="(\/assets\/themes\/default\/[a-f0-9]{64}\/site.css)"/.exec(response.body)?.[1];
+  assert.ok(stylesheet);
+  const css = await app.inject(stylesheet);
+  assert.equal(css.statusCode, 200); assert.match(css.headers['content-type']!, /text\/css/);
+  assert.match(css.headers['cache-control']!, /immutable/);
+  const fragment = (await app.inject({ url: '/', headers: { accept: fragmentType } })).json();
+  assert.equal(fragment.home, true); assert.match(fragment.content, /<h1\b/);
+  const firstPanel = await app.inject('/panel');
+  assert.equal(firstPanel.statusCode, 200);
+  assert.match(firstPanel.body, /docker compose run --rm panel-init/);
+  assert.match(firstPanel.body, /npm run panel:init -- admin/);
+  assert.doesNotMatch(firstPanel.body, /name="password"/);
+  assert.equal((await app.inject('/missing')).statusCode, 404);
+  const store = new PanelStore(new PanelFiles(content));
+  const { revision, site } = await store.menu();
+  const settings = { revision, theme: 'default', title: site.title, home: site.home, language: 'pl', languages: 'pl', description: 'Opis witryny', brandName: 'Example brand', tagline: 'Example tagline', logo: '/media/logo.png', favicon: '/media/favicon.png', showBrandName: true, footer: '**Stopka**', footerFormat: 'markdown' as const };
+  await store.saveSettings(settings);
+  assert.match(await readFile(join(content, 'site.yml'), 'utf8'), /theme: default/);
+  await new Promise(resolve => setTimeout(resolve, 150));
+  const configured = (await app.inject('/')).body;
+  assert.match(configured, /<meta name="description" content="Opis witryny">/);
+  assert.match(configured, /<link rel="icon" href="\/media\/favicon.png">/);
+  assert.match(configured, /class="site-logo" src="\/media\/logo.png"/);
+  assert.match(configured, /Example brand/); assert.match(configured, /Example tagline/);
+  assert.match(configured, /<footer class="site-footer"><p><strong>Stopka<\/strong><\/p>/);
+  await assert.rejects(store.saveSettings(settings), { statusCode: 409 });
+});
+
+test('create-template exports the default theme into content/templates without overwriting files', async t => {
+  const root = await mkdtemp(join(tmpdir(), 'engine-template-export-'));
+  const content = join(root, 'content'), cache = join(root, 'cache');
+  t.after(() => rm(root, { recursive: true, force: true }));
+  await mkdir(content);
+  const executable = resolve('node_modules/.bin/tsx');
+  const command = [resolve('karui/scripts/create-template.ts'), 'firmowy'];
+  const created = await execute(executable, command, { cwd: resolve('.'), env: { ...process.env, CONTENT_DIR: content } });
+  assert.match(created.stdout, /Utworzono szablon Firmowy/);
+  assert.deepEqual(JSON.parse(await readFile(join(content, 'templates/firmowy/theme.json'), 'utf8')), {
+    name: 'Firmowy', version: '1.0.0', description: 'Szablon utworzony na podstawie domyślnego motywu.',
+  });
+  assert.match(await readFile(join(content, 'templates/firmowy/templates/components/layout.edge'), 'utf8'), /site-footer/);
+  assert.match(await readFile(join(content, 'templates/firmowy/assets/site.css'), 'utf8'), /Segoe UI/);
+  const themes = new Themes(resolve('karui'), content, cache, 'test');
+  assert.deepEqual((await themes.list()).map(item => item.id), ['default', 'firmowy']);
+  assert.equal((await themes.get('firmowy')).theme.label, 'Firmowy');
+  await assert.rejects(execute(executable, command, { cwd: resolve('.'), env: { ...process.env, CONTENT_DIR: content } }), /już istnieje/);
+});
