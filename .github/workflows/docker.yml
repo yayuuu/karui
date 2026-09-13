@@ -15,7 +15,7 @@ permissions:
 jobs:
   publish:
     name: Test, build and publish Karui
-    runs-on: [self-hosted, linux, debian-13]
+    runs-on: ubuntu-latest
     env:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME || vars.DOCKERHUB_USERNAME }}
 
@@ -31,11 +31,8 @@ jobs:
           node-version: 24
           cache: npm
 
-      - name: Verify the Debian runner
-        run: |
-          test "$(. /etc/os-release && printf '%s' "$ID")" = "debian"
-          test "$(. /etc/os-release && printf '%s' "$VERSION_ID")" = "13"
-          docker info >/dev/null
+      - name: Verify Docker
+        run: docker info >/dev/null
 
       - name: Detect a framework version change
         id: version
