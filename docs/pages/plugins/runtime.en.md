@@ -62,6 +62,9 @@ With an 8/16 pool, twelve permitted concurrent tasks may use twelve workers. If 
 | `PLUGIN_WORKER_STACK_MB` | 4 | 1–64 MB, integer |
 | `CONTENT_CACHE_DIR` | temp + `karui-cache` | Docker: `/var/cache/karui` on tmpfs |
 | `CONTENT_REFRESH_MS` | 1000 | 100–60000 ms |
+| `HTTP_COMPRESSION` | true | `true` or `false` |
+
+`HTTP_COMPRESSION=true` enables compression for responses that benefit from it. The engine selects Brotli or gzip from the browser's `Accept-Encoding` header; Brotli takes priority when the client accepts both formats. Images and videos stored in compressed formats are not compressed again. Set it to `false` to disable this feature completely, for example when compression is handled exclusively by a reverse proxy.
 
 The documentation uses one permanent worker and at most four. Main Compose sets `PLUGIN_WORKERS` and `PLUGIN_MAX_WORKERS` separately. More workers increase throughput, RAM use, and CPU load; they do not speed up one handler or a `concurrent: false` queue. Tune with measurements from real workloads.
 

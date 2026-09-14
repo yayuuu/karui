@@ -8,6 +8,7 @@ services:
     environment:
       CONTENT_DIR: /app/content
       CONTENT_CACHE_DIR: /var/cache/karui
+      HTTP_COMPRESSION: ${HTTP_COMPRESSION:-true}
       PORT: 3002
       PLUGIN_WORKERS: 1
       PLUGIN_MAX_WORKERS: 4

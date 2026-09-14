@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, mkdir, writeFile, rm } from 'node:fs/promises';
+import { mkdtemp, mkdir, writeFile, rm, symlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { brotliDecompressSync, gunzipSync } from 'node:zlib';
 import { buildApp } from '../src/app.js';
 import { configFromEnv } from '../src/config.js';
 import { fragmentType } from '../src/page-fragment.js';
@@ -11,6 +12,9 @@ test('SSR, fragment navigation, menu hierarchy, redirects and safe error pages u
   const root = await mkdtemp(join(tmpdir(), 'engine-http-'));
   const content = join(root, 'content');
   await mkdir(join(content, 'pages/section'), { recursive: true });
+  await mkdir(join(content, 'media'));
+  await writeFile(join(root, 'linked.png'), 'intentional symlink');
+  await symlink(join(root, 'linked.png'), join(content, 'media/linked.png'));
   await writeFile(join(content, 'site.yml'), 'title: Test\nlanguage: en\nlanguages: [en, pl, fr]\nmenu:\n  - title: Section\n    href: /section\n    children:\n      - title: Article\n        href: /section/article\nredirects:\n  /old/: /section/\n');
   await writeFile(join(content, 'site.pl.yml'), 'title: Polska witryna\ndescription: Polski opis witryny\nfooter: Polska stopka\n');
   await writeFile(join(content, 'pages/section/index.md'), '---\ntitle: Section\n---\nSection text');
@@ -18,6 +22,24 @@ test('SSR, fragment navigation, menu hierarchy, redirects and safe error pages u
   await writeFile(join(content, 'pages/section/article.pl.md'), '---\ntitle: Artykuł\nformat: markdown\n---\n**Witaj**');
   const app = await buildApp({ ...configFromEnv(), contentDir: content, contentCacheDir: join(root, 'cache'), contentRefreshMs: 50 });
   t.after(async () => { await app.close(); await rm(root, { recursive: true, force: true }); });
+  assert.equal(configFromEnv({}).httpCompression, true);
+  assert.equal(configFromEnv({ HTTP_COMPRESSION: 'false' }).httpCompression, false);
+  assert.throws(() => configFromEnv({ HTTP_COMPRESSION: 'yes' }));
+  const brotli = await app.inject({ url: '/section/article', headers: { 'accept-encoding': 'gzip, br' } });
+  assert.equal(brotli.headers['content-encoding'], 'br');
+  assert.match(brotliDecompressSync(brotli.rawPayload).toString(), /<strong>Hello<\/strong>/);
+  const gzip = await app.inject({ url: '/section/article', headers: { 'accept-encoding': 'gzip' } });
+  assert.equal(gzip.headers['content-encoding'], 'gzip');
+  assert.match(gunzipSync(gzip.rawPayload).toString(), /<strong>Hello<\/strong>/);
+  const staticAsset = await app.inject({ url: '/assets/main.js', headers: { 'accept-encoding': 'br' } });
+  assert.equal(staticAsset.headers['content-encoding'], 'br');
+  assert.ok(brotliDecompressSync(staticAsset.rawPayload).byteLength > 1024);
+
+  const uncompressed = await buildApp({ ...configFromEnv({ HTTP_COMPRESSION: 'false' }), contentDir: content, contentCacheDir: join(root, 'cache-uncompressed'), contentRefreshMs: 50 });
+  t.after(() => uncompressed.close());
+  const plain = await uncompressed.inject({ url: '/section/article', headers: { 'accept-encoding': 'br, gzip' } });
+  assert.equal(plain.headers['content-encoding'], undefined);
+  assert.match(plain.body, /<strong>Hello<\/strong>/);
   for (const url of ['/', '/section', '/section/article', '/missing']) {
     const full = await app.inject(url), fragment = await app.inject({ url, headers: { accept: fragmentType } });
     assert.equal(full.statusCode, url === '/missing' ? 404 : 200, full.body);
@@ -50,6 +72,10 @@ test('SSR, fragment navigation, menu hierarchy, redirects and safe error pages u
   const remembered = await app.inject({ url: '/section/article', headers: { cookie: 'karui-language=pl' } });
   assert.match(remembered.body, /<strong>Witaj<\/strong>/);
   assert.match((await app.inject('/section/article?lang=fr')).body, /<strong>Hello<\/strong>/, 'Missing translations fall back to the default language');
+  const linkedMedia = await app.inject('/media/linked.png');
+  assert.equal(linkedMedia.statusCode, 200);
+  assert.equal(linkedMedia.body, 'intentional symlink');
+  assert.equal((await app.inject('/media/../linked.png')).statusCode, 404);
   const localizedFallback = await app.inject('/missing?lang=pl');
   assert.equal(localizedFallback.statusCode, 404);
   assert.match(localizedFallback.body, /Błąd 404/);

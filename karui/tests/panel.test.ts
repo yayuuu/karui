@@ -32,6 +32,7 @@ test('panel shell localizes site branding and navigation independently of panel 
 
 test('integrated panel: authentication, files, galleries and tree menu', async t => {
   const content = await mkdtemp(join(tmpdir(), 'karui-panel-'));
+  const cache = content + '-cache';
   await mkdir(join(content, 'pages/section'), { recursive: true });
   await writeFile(join(content, 'pages/section/index.md'), '---\ntitle: Section\n---\n');
   await writeFile(join(content, 'pages/section/article.md'), '---\ntitle: Article\n---\n');
@@ -41,8 +42,8 @@ test('integrated panel: authentication, files, galleries and tree menu', async t
   const files = new PanelFiles(content); const store = new PanelStore(files);
   await files.write('themes/sample/theme.json', JSON.stringify({ name: 'Sample theme', version: '1' }));
   await files.write('state/panel/accounts.json', JSON.stringify([{ login: 'owner', password: await hashPassword('test-password-123'), role: 'owner', version: 1 }]));
-  const app = await buildApp({ ...configFromEnv(), contentDir: content, panelSecureCookie: false });
-  t.after(async () => { await app.close(); await rm(content, { recursive: true, force: true }); });
+  const app = await buildApp({ ...configFromEnv(), contentDir: content, contentCacheDir: cache, panelSecureCookie: false });
+  t.after(async () => { await app.close(); await rm(content, { recursive: true, force: true }); await rm(cache, { recursive: true, force: true }); });
   const client = () => {
     let cookie = '', csrf = '';
     const get = async (url: string) => { const response = await app.inject({ url, headers: { cookie } }); for (const value of response.cookies) if (value.name === 'karui-panel') cookie = value.name + '=' + value.value; csrf = /data-csrf="([a-f0-9]+)"/.exec(response.body)?.[1] ?? csrf; return response; };
@@ -239,7 +240,9 @@ test('integrated panel: authentication, files, galleries and tree menu', async t
     assert.equal((await sharp((await app.inject(photo.thumbnail)).rawPayload).metadata()).format, 'webp');
     const page = await store.page('/panel-test'); assert.equal(page.page.gallery.length, 1); assert.match(page.body, /Nowa treść/);
     const publicPage = await app.inject('/panel-test'); assert.match(publicPage.body, /data-gallery/); assert.doesNotMatch(publicPage.body, /plugin-assets\/gallery/);
+    assert.equal((await readdir(join(cache, 'galleries'))).filter(file => file.endsWith('.json')).length, 1);
     const removed = await admin.post('/panel/api/photos/change', { path: page.page.href, revision: page.revision, index: 0, action: 'delete' }); assert.equal(removed.statusCode, 200, removed.body);
+    assert.equal((await readdir(join(cache, 'galleries'))).filter(file => file.endsWith('.json')).length, 0);
     assert.equal((await store.page('/panel-test')).page.gallery.length, 0);
     assert.equal((await app.inject(photo.src)).statusCode, 200, 'Shared media must not be deleted');
   });

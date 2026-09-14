@@ -16,6 +16,8 @@ Each language version of a page has its own gallery metadata. If another languag
 
 **Insert into content** stores a gallery photo as `[![Description](photo.small.webp)](photo.large.png)` in Markdown, or as an equivalent linked `<img>` in HTML. Karui opens that preview in a one-photo lightbox and downloads the large image only after it is clicked. The enhancement applies only when the thumbnail and link belong to the same gallery entry. Ordinary Markdown images and standalone `<img>` elements are not changed.
 
+Image metadata, including dimensions and file size, is cached separately for every page and language version under `CONTENT_CACHE_DIR/galleries`. After a restart, the first page request needs one cache-file read instead of checking every image separately. Uploading, deleting, changing a description or order, and copying a gallery invalidate the appropriate file automatically.
+
 ## Running locally
 
 From the project directory, after installing dependencies:

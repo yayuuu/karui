@@ -16,6 +16,8 @@ Każda wersja językowa strony ma własne metadane galerii. Jeśli inny język z
 
 Przycisk **Wstaw do treści** zapisuje zdjęcie galerii jako `[![Opis](photo.small.webp)](photo.large.png)` w Markdown albo równoważny odnośnik zawierający `<img>` w HTML. Karui otwiera taki podgląd w jednoelementowym lightboksie i pobiera duży obraz dopiero po kliknięciu. Mechanizm działa tylko wtedy, gdy miniatura i odnośnik należą do tego samego wpisu galerii. Zwykłe obrazy Markdown i samodzielne elementy `<img>` nie są modyfikowane.
 
+Metadane obrazów, między innymi ich wymiary i rozmiar pliku, są przechowywane osobno dla każdej strony i wersji językowej w `CONTENT_CACHE_DIR/galleries`. Po ponownym uruchomieniu pierwszy odczyt strony wymaga jednego odczytu pliku cache zamiast osobnego sprawdzania każdego obrazu. Upload, usunięcie, zmiana opisu, kolejności lub skopiowanie galerii unieważniają właściwy plik automatycznie.
+
 ## Uruchomienie lokalne
 
 W katalogu projektu, po zainstalowaniu zależności:

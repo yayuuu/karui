@@ -16,6 +16,8 @@ Chaque version linguistique d’une page possède ses propres métadonnées de g
 
 Le bouton **Insérer dans le contenu** enregistre une photo sous la forme `[![Description](photo.small.webp)](photo.large.png)` en Markdown, ou comme un lien contenant un élément `<img>` équivalent en HTML. Karui ouvre cet aperçu dans une visionneuse contenant une seule photo et ne télécharge la grande image qu’après le clic. Ce comportement s’applique uniquement lorsque la miniature et le lien appartiennent à la même entrée de galerie. Les images Markdown ordinaires et les éléments `<img>` autonomes ne sont pas modifiés.
 
+Les métadonnées des images, notamment leurs dimensions et la taille du fichier, sont mises en cache séparément pour chaque page et chaque version linguistique sous `CONTENT_CACHE_DIR/galleries`. Après un redémarrage, la première requête de page ne nécessite qu’une lecture du fichier de cache au lieu de vérifier chaque image. L’ajout, la suppression, la modification d’une description ou de l’ordre et la copie d’une galerie invalident automatiquement le fichier concerné.
+
 ## Exécution locale
 
 Depuis le répertoire du projet, après l’installation des dépendances :

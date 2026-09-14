@@ -62,6 +62,9 @@ Avec une configuration 8/16, douze tâches concurrentes autorisées peuvent util
 | `PLUGIN_WORKER_STACK_MB` | 4 | 1–64 Mo, entier |
 | `CONTENT_CACHE_DIR` | temp + `karui-cache` | Docker : `/var/cache/karui` sur tmpfs |
 | `CONTENT_REFRESH_MS` | 1000 | 100–60000 ms |
+| `HTTP_COMPRESSION` | true | `true` ou `false` |
+
+`HTTP_COMPRESSION=true` active la compression des réponses qui en bénéficient. Le moteur choisit Brotli ou gzip selon l’en-tête `Accept-Encoding` du navigateur ; Brotli est prioritaire lorsque le client accepte les deux formats. Les images et vidéos déjà enregistrées dans des formats compressés ne sont pas recompressées. Définissez la valeur sur `false` pour désactiver complètement cette fonction, par exemple lorsque la compression est exclusivement assurée par un proxy inverse.
 
 La documentation utilise un worker permanent et quatre au maximum. Le Compose principal règle `PLUGIN_WORKERS` et `PLUGIN_MAX_WORKERS` séparément. Davantage de workers augmente le débit, mais aussi la RAM et le CPU ; cela n’accélère ni un handler unique ni une file `concurrent: false`. Ajustez-les à partir de mesures réelles.
 

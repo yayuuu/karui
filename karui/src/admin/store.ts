@@ -7,6 +7,7 @@ import { ContentRepository, flattenMenu, galleryVisibility, languageCode, plugin
 import { contentFormats } from '../content/format.js';
 import { menuMessageIds, parseMenuTranslations, updateMenuCatalog } from '../content/menu-translations.js';
 import { PanelFiles, PanelError, digest } from './files.js';
+import type { GalleryImages } from '../gallery.js';
 
 const pageInput = z.object({ path: route, language: languageCode.optional(), revision: z.string(), title: z.string(), keywords: z.string().default(''), order: z.coerce.number().int().nonnegative(), body: z.string().max(200_000), plugin: z.string().default(''), pluginPlacement: pluginPlacement.optional(), showPrint: z.boolean().optional(), showPdf: z.boolean().optional(), showSubpages: z.boolean().optional(), format: z.enum(contentFormats).optional(), published: z.boolean().optional(), galleryVisibility: galleryVisibility.optional() });
 const subpageOrderInput = z.object({
@@ -45,7 +46,7 @@ function splitSource(source: string) {
 }
 
 export class PanelStore {
-  constructor(readonly files: PanelFiles, readonly repository = new ContentRepository(files.root)) {}
+  constructor(readonly files: PanelFiles, readonly repository = new ContentRepository(files.root), private readonly galleryImages?: GalleryImages) {}
   async plugins() {
     const entries = await readdir(await this.files.path('plugins'), { withFileTypes: true }).catch(error => { if (error.code === 'ENOENT') return []; throw error; });
     return entries.filter(entry => entry.isDirectory() && /^[a-z0-9-]+$/.test(entry.name)).map(entry => entry.name).filter(name => name !== 'gallery').sort();
@@ -145,6 +146,7 @@ export class PanelStore {
     const backup = 'state/panel/trash/' + Date.now() + '-' + randomUUID() + '.json';
     await this.files.write(backup, JSON.stringify({ type: 'page', source: sources[0]?.source ?? '', translations: sources }));
     for (const source of sources) await this.files.remove(source.file);
+    for (const [variantLanguage] of variants ?? []) await this.galleryImages?.invalidate(path, variantLanguage || content.site.language);
     this.repository.invalidate();
     return { backup };
   }
@@ -281,6 +283,7 @@ export class PanelStore {
     const source = `---\n${page.document.toString()}---\n${page.body}`;
     await this.files.write(page.targetFile, source);
     if (page.migration && page.file !== page.targetFile) await this.files.remove(page.file);
+    await this.galleryImages?.invalidate(page.page.href, page.language);
     this.repository.invalidate();
     // A successful commit must not depend on a second, fallible cache refresh.
     return { revision: digest(source), gallery: photos };

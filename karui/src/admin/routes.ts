@@ -15,10 +15,11 @@ import { join, relative } from 'node:path';
 import type { PluginRunner } from '../plugins.js';
 import { createPluginContext } from '../plugins/context.js';
 import { clientMessages, languageLinks, requestLanguage, type Translations } from '../i18n.js';
+import type { GalleryImages } from '../gallery.js';
 
-export async function registerPanel(app: FastifyInstance, themes: Themes, config: Config, repository: ContentRepository, plugins: PluginRunner, translations: Translations) {
+export async function registerPanel(app: FastifyInstance, themes: Themes, config: Config, repository: ContentRepository, plugins: PluginRunner, translations: Translations, galleryImages: GalleryImages) {
   const files = new PanelFiles(config.contentDir);
-  const store = new PanelStore(files, repository);
+  const store = new PanelStore(files, repository, galleryImages);
   const auth = new PanelAuth(files, config.panelSecureCookie);
   await auth.init();
   await app.register(async panel => {

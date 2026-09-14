@@ -25,6 +25,7 @@ services:
     environment:
       CONTENT_DIR: /app/content
       CONTENT_CACHE_DIR: /var/cache/karui
+      HTTP_COMPRESSION: "true"
       PANEL_SECURE_COOKIE: "false"
     volumes:
       - ./content:/app/content
@@ -37,6 +38,8 @@ Start Karui:
 ```sh
 docker compose up -d
 ```
+
+Karui compresses eligible responses with Brotli or gzip according to the browser's `Accept-Encoding` header. Set `HTTP_COMPRESSION=false` when compression should be disabled, for example when it is handled exclusively by a reverse proxy.
 
 Open `http://localhost:3000`. Set `PANEL_SECURE_COOKIE` to `true` when the site
 is served through HTTPS. Docker creates the mounted `content/` directory when it

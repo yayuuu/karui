@@ -2,18 +2,19 @@ import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import rateLimit from '@fastify/rate-limit';
 import cookie from '@fastify/cookie';
+import compress from '@fastify/compress';
 import { dirname, join, resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { containedFile, localizedContent, navigation, type Page } from './content.js';
+import { localizedContent, navigation, type Page } from './content.js';
 import { renderPageContent } from './content/code.js';
 import { CachedContentRepository } from './content/cache.js';
 import { configFromEnv, type Config } from './config.js';
 import { PluginRunner } from './plugins.js';
 import { createPluginContext } from './plugins/context.js';
 import { registerPanel } from './admin/routes.js';
-import { GalleryImages, inlineGallery, visibleGallery } from './gallery.js';
+import { GalleryImages, inlineGallery, mediaFilePath, visibleGallery } from './gallery.js';
 import { isPublished, publicContent } from './content/public.js';
 import { fragmentType, type PageFragment } from './page-fragment.js';
 import { Themes } from './themes/index.js';
@@ -25,11 +26,18 @@ const policy = ["default-src 'self'", "script-src 'self'", "worker-src 'self'", 
 export async function buildApp(config: Config = configFromEnv(), logging = false) {
   const app = Fastify({ logger: logging, bodyLimit: 150_000, routerOptions: { maxParamLength: 256 } });
   await app.register(cookie);
+  if (config.httpCompression) {
+    await app.register(compress, {
+      encodings: ['br', 'gzip'],
+      globalDecompression: false,
+      threshold: 1024,
+    });
+  }
   const repository = new CachedContentRepository(config.contentDir, config.contentCacheDir, config.contentRefreshMs,
     error => app.log.warn({ err: error }, 'Content refresh failed; serving the last valid snapshot'));
   app.addHook('onClose', () => repository.close());
   app.addHook('onReady', async () => { repository.start(); });
-  const galleryImages = new GalleryImages(config.contentDir);
+  const galleryImages = new GalleryImages(config.contentDir, join(config.contentCacheDir, 'galleries'));
   await repository.load();
   const assetHash = createHash('sha256');
   for (const name of ['main.js', 'panel.js']) assetHash.update(await readFile(join(root, 'public/assets', name)));
@@ -54,16 +62,15 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     if (!asset) return reply.code(404).send();
     return reply.sendFile(asset.path, asset.root, { maxAge: '1y', immutable: true });
   });
-  await registerPanel(app, themes, config, repository, plugins, translations);
+  await registerPanel(app, themes, config, repository, plugins, translations, galleryImages);
   // A photo wall can fetch hundreds of images without exhausting the page/API budget.
   app.get<{ Params: { '*': string } }>('/media/*', { config: { rateLimit: { max: 1200, timeWindow: '1 minute' } } }, async (request, reply) => {
     const mediaRoot = join(config.contentDir, 'media');
     const name = request.params['*'];
     if (!/\.(?:png|jpe?g|webp|gif|mov|mp4|webm|mp3|ogg|woff2|html)$/i.test(name)) return reply.code(404).send();
-    const file = await containedFile(mediaRoot, name);
-    if (!file) return reply.code(404).send();
-    if (name.endsWith('.html')) reply.header('Content-Security-Policy', "sandbox allow-scripts allow-downloads; default-src 'self' https: data: blob:; script-src 'self' https: 'unsafe-inline'; style-src 'self' https: 'unsafe-inline'; object-src 'none'; base-uri 'none'");
-    return reply.sendFile(relative(mediaRoot, file), mediaRoot);
+    if (!mediaFilePath(mediaRoot, name)) return reply.code(404).send();
+    if (/\.html$/i.test(name)) reply.header('Content-Security-Policy', "sandbox allow-scripts allow-downloads; default-src 'self' https: data: blob:; script-src 'self' https: 'unsafe-inline'; style-src 'self' https: 'unsafe-inline'; object-src 'none'; base-uri 'none'");
+    return reply.sendFile(name, mediaRoot);
   });
   app.get<{ Params: { name: string; key: string; '*': string } }>('/plugin-assets/:name/assets/:key/*', async (request, reply) => {
     const { name, key, '*': path } = request.params;
@@ -132,7 +139,7 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     const sourcePage = selected ?? content.pages.get('/404') ?? { title: t('Error 404'), href: '/404', html: `<br><br><h1 style="text-align:center">404<br>${t('The requested page does not exist.')}</h1><br><br>`, keywords: '', order: 0, gallery: [] } satisfies Page;
     const origin = `${request.protocol}://${request.host}`;
     const visiblePhotos = visibleGallery(sourcePage, origin);
-    const galleryPhotos = await galleryImages.describe(sourcePage.gallery);
+    const galleryPhotos = await galleryImages.describe(sourcePage, sourcePage.language ?? locale.language);
     const visibleSources = new Set(visiblePhotos.map(photo => photo.src));
     const embeddedGallery = inlineGallery(sourcePage.html, sourcePage.href, galleryPhotos, origin);
     const page = { ...sourcePage, html: embeddedGallery.html, gallery: galleryPhotos.filter(photo => visibleSources.has(photo.src)) };

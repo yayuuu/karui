@@ -68,6 +68,9 @@ Przykładowo: przy ustawieniach 8/16 dwanaście równoległych, dozwolonych zada
 | `PLUGIN_WORKER_STACK_MB` | 4 | 1–64 MB, liczba całkowita |
 | `CONTENT_CACHE_DIR` | tmp + `karui-cache` | Docker: `/var/cache/karui` na tmpfs |
 | `CONTENT_REFRESH_MS` | 1000 | 100–60000 ms |
+| `HTTP_COMPRESSION` | true | `true` albo `false` |
+
+`HTTP_COMPRESSION=true` włącza kompresję odpowiedzi, dla których ma ona sens. Silnik wybiera Brotli albo gzip na podstawie nagłówka `Accept-Encoding` przeglądarki; Brotli ma pierwszeństwo, jeśli klient akceptuje oba formaty. Obrazy i filmy zapisane w skompresowanych formatach nie są ponownie kompresowane. Ustaw `false`, aby całkowicie wyłączyć tę funkcję, na przykład gdy odpowiada za nią wyłącznie reverse proxy.
 
 Tabela pokazuje domyślne ustawienia silnika. Instancja dokumentacji używa mniejszej puli: 1 stałego workera i maksymalnie 4. W głównym Compose wartości `PLUGIN_WORKERS` i `PLUGIN_MAX_WORKERS` są ustawiane osobno. Zwiększając pierwszą, sprawdź również drugą.
 

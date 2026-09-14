@@ -1,6 +1,6 @@
 {
   "name": "karui",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "license": "BSD-3-Clause",
   "private": true,
   "type": "module",
@@ -26,6 +26,7 @@
     "check": "npm run typecheck && npm test"
   },
   "dependencies": {
+    "@fastify/compress": "^9.2.0",
     "@fastify/cookie": "^11.1.2",
     "@fastify/formbody": "^9.0.0",
     "@fastify/multipart": "^10.1.1",

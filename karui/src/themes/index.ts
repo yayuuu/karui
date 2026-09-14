@@ -145,7 +145,7 @@ export class Themes {
           if (source) {
             if (!source.isFile() || source.isSymbolicLink()) throw new Error('Invalid theme client entry');
             const built = await build({ entryPoints: [join(directory, 'client.ts')], bundle: true, write: false, minify: true,
-              platform: 'browser', format: 'esm', target: 'es2022', nodePaths: [join(this.root, 'node_modules')],
+              platform: 'browser', format: 'esm', target: 'es2022', nodePaths: [join(this.root, 'node_modules'), join(this.root, '..', 'node_modules')],
               tsconfigRaw: { compilerOptions: { jsx: 'react-jsx', jsxImportSource: 'preact' } }, logLevel: 'silent' });
             if (built.outputFiles[0]!.contents.length > 4_000_000) throw new Error('Theme client exceeds 4 MB');
             assets.set('client.js', Buffer.from(built.outputFiles[0]!.contents));
