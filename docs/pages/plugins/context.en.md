@@ -73,6 +73,6 @@ Public routes accept JSON and text through Fastify parsers. URL-encoded and mult
 
 `PluginContext` does not expose `request.file()`. If a plugin accepts files, design an upload using a supported format, such as JSON within an appropriate size limit, or use the engine gallery.
 
-A JSON response is `{ type: 'json', status: 200, data: {...} }`. `status` defaults to 200 and accepts 200–599. Plugin responses cannot set custom headers or cookies, or return streams, binary files, or `Location` redirects.
+A JSON response is `{ type: 'json', status: 200, data: {...} }`. `status` defaults to 200 and accepts 200–599. For downloads, return `{ type: 'file', name: 'Carbonyl-x86_64.AppImage' }`. The engine streams that regular file from `content/media/files` as an attachment, including HEAD and HTTP Range support. Names cannot contain path separators or start with a dot; symlinks are rejected. Plugin responses cannot set custom headers or cookies, return arbitrary streams, or issue `Location` redirects.
 
 Handle `HEAD` without writes or other side effects. The HTTP engine omits the response body for these requests.

@@ -73,6 +73,10 @@ Publiczne trasy obsługują JSON i tekst zgodnie z parserami Fastify. Obsługa f
 
 `PluginContext` nie udostępnia `request.file()`. Jeśli wtyczka ma przyjmować pliki, zaprojektuj przesyłanie ich w obsługiwanym formacie, np. jako JSON z odpowiednim limitem rozmiaru, albo skorzystaj z galerii silnika.
 
-Odpowiedź JSON ma postać `{ type: 'json', status: 200, data: {...} }`. Pole `status` domyślnie wynosi 200 i przyjmuje wartości od 200 do 599. Odpowiedź wtyczki nie pozwala ustawiać własnych nagłówków i cookies ani zwracać strumieni, plików binarnych czy przekierowań z nagłówkiem `Location`.
+Odpowiedź JSON ma postać `{ type: 'json', status: 200, data: {...} }`. Pole `status` domyślnie wynosi 200 i przyjmuje wartości od 200 do 599. Odpowiedź wtyczki nie pozwala ustawiać własnych nagłówków i cookies ani zwracać dowolnych strumieni czy przekierowań z nagłówkiem `Location`.
 
 Żądania `HEAD` obsługuj bez zapisywania danych i innych efektów ubocznych. Silnik HTTP pomija w nich treść odpowiedzi.
+
+### Pobieranie plików
+
+Zwróć `{ type: 'file', name: 'Carbonyl-x86_64.AppImage' }`, aby pobrać plik z `content/media/files`. Silnik strumieniuje go jako załącznik i obsługuje HEAD oraz HTTP Range. Nazwa nie może zawierać separatorów ścieżki ani zaczynać się od kropki. Dowiązania symboliczne są odrzucane.

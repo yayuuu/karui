@@ -13,6 +13,7 @@ import { CachedContentRepository } from './content/cache.js';
 import { configFromEnv, type Config } from './config.js';
 import { PluginRunner } from './plugins.js';
 import { createPluginContext } from './plugins/context.js';
+import { sendPluginFile } from './plugins/files.js';
 import { registerPanel } from './admin/routes.js';
 import { GalleryImages, inlineGallery, mediaFilePath, visibleGallery } from './gallery.js';
 import { isPublished, publicContent } from './content/public.js';
@@ -149,6 +150,7 @@ export async function buildApp(config: Config = configFromEnv(), logging = false
     if (page.plugin && !home) {
       try {
         const result = await plugins.run(createPluginContext({ url: request.url, method: request.method, body: request.body, suffix: path.slice(page.href.length), page, contentRoot: config.contentDir, cacheRoot: config.contentCacheDir, language: locale.language, defaultLanguage: allContent.site.language }));
+        if (result.type === 'file') return sendPluginFile(reply, config.contentDir, result.name);
         if (result.type === 'json') return reply.code(result.status).send(result.data);
         status = result.status;
         widgetHtml = result.html;

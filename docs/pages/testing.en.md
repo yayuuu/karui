@@ -30,7 +30,7 @@ npm run test:panel
 
 Forms, validation, and file writes belong to the plugin. The engine does not automatically generate create, read, update, and delete operations (CRUD).
 
-The plugin API does not provide task scheduling (cron), WebSockets, streams, binary responses, custom headers and cookies, or Fastify route registration. The client changes the view through [host commands](/plugins/client), without direct DOM access. The engine provides neither an installer nor a secure environment for executing code from untrusted authors.
+The plugin API does not provide task scheduling (cron), WebSockets, arbitrary streams, custom headers and cookies, or Fastify route registration. The client changes the view through [host commands](/plugins/client), without direct DOM access. The engine provides neither an installer nor a secure environment for executing code from untrusted authors.
 
 ## Finding the cause of an error
 

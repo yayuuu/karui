@@ -14,6 +14,7 @@ import { renderPageContent } from '../content/code.js';
 import { join, relative } from 'node:path';
 import type { PluginRunner } from '../plugins.js';
 import { createPluginContext } from '../plugins/context.js';
+import { sendPluginFile } from '../plugins/files.js';
 import { clientMessages, languageLinks, requestLanguage, type Translations } from '../i18n.js';
 import type { GalleryImages } from '../gallery.js';
 
@@ -176,6 +177,7 @@ export async function registerPanel(app: FastifyInstance, themes: Themes, config
           language: edit.language, defaultLanguage: (await repository.load()).site.language,
           admin: { login: account.login, role: account.role, csrf: current.session.csrf },
         }));
+        if (result.type === 'file') return sendPluginFile(reply, config.contentDir, result.name);
         if (result.type === 'json') return reply.code(result.status).send(result.data);
         reply.code(result.status);
         const asset = (file: string) => `/panel/plugin-assets/${name}/${file}?v=${result.versionKey}`;

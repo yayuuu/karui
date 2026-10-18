@@ -73,6 +73,6 @@ Les routes publiques acceptent le JSON et le texte grâce aux parseurs Fastify. 
 
 `PluginContext` n’expose pas `request.file()`. Si une extension doit accepter des fichiers, concevez un transfert dans un format pris en charge, par exemple du JSON avec une limite adaptée, ou utilisez la galerie du moteur.
 
-Une réponse JSON prend la forme `{ type: 'json', status: 200, data: {...} }`. `status` vaut 200 par défaut et accepte les valeurs de 200 à 599. Une réponse d’extension ne peut pas définir d’en-têtes ni de cookies personnalisés, ni renvoyer de flux, de fichiers binaires ou de redirection `Location`.
+Une réponse JSON prend la forme `{ type: 'json', status: 200, data: {...} }`. `status` vaut 200 par défaut et accepte les valeurs de 200 à 599. Une réponse d’extension ne peut pas définir d’en-têtes ni de cookies personnalisés, ni renvoyer de flux arbitraires ou de redirection `Location`. Pour un téléchargement, renvoyez `{ type: 'file', name: 'Carbonyl-x86_64.AppImage' }` : le moteur diffuse le fichier de `content/media/files` en pièce jointe avec HEAD et HTTP Range. Les séparateurs de chemin, les noms commençant par un point et les liens symboliques sont refusés.
 
 Traitez `HEAD` sans écriture ni autre effet de bord. Le moteur HTTP omet le corps de réponse pour ces requêtes.
